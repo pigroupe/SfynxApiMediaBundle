@@ -5,7 +5,6 @@
   "keywords": ["media", "api", "rest", "ddd"],
   "homepage": "http://pigroupe.github.io/cmf-sfynx/",
   "license": "LGPL-3.0+",
-
   "authors": [
     {
       "name": "Etienne de Longeaux",
@@ -18,12 +17,13 @@
   ],
 
   "require": {
-    "php":                          ">=7.0",
+    "php": ">=7.0",
     "ext-imagick":                  "*",
-    "symfony/framework-bundle": "~2.8|~3.0"
-    "doctrine/orm":                 "*",
-    "doctrine/doctrine-bundle":     "*",
-    "knplabs/knp-gaufrette-bundle": "~0.3"
+    "symfony/framework-bundle": "~2.8|~3.0",
+    "doctrine/orm": "*",
+    "doctrine/doctrine-bundle": "*",
+    "knplabs/knp-gaufrette-bundle": "~0.4",
+    "sfynx-project/core-bundle": "2.x-dev"
   },
 
   "require-dev": {
