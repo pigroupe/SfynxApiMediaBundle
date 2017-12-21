@@ -1,0 +1,51 @@
+parameters:
+    doc_api_controller_create_one.class: Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Command\CreateOneController
+    doc_api_controller_update_one.class: Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Command\UpdateOneController
+    doc_api_controller_delete_one.class: Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Command\DeleteOneController
+
+    doc_api_controller_get_one.class: Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Query\GetOneController
+    doc_api_controller_get_one_binary.class: Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Query\GetOneBinaryController
+    doc_api_controller_get_endpoint.class: Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Query\GetEndpointController
+
+services:
+    #
+    # COMMAND SERVICES
+    #
+    doc_api_controller_create_one:
+        class: '%doc_api_controller_create_one.class%'
+        public: true
+        arguments:
+            - '@sfynx.apimedia.manager.media.entity'
+
+    doc_api_controller_update_one:
+        class: '%doc_api_controller_update_one.class%'
+        public: true
+        arguments:
+            - '@sfynx.apimedia.manager.media.entity'
+
+    doc_api_controller_delete_one:
+        class: '%doc_api_controller_delete_one.class%'
+        public: true
+        arguments:
+            - '@sfynx.apimedia.manager.media.entity'
+
+    #
+    # QUERY SERVICES
+    #
+    doc_api_controller_get_one:
+        class: '%doc_api_controller_get_one.class%'
+        public: true
+        arguments:
+            - '@sfynx.apimedia.manager.media.entity'
+
+    doc_api_controller_get_one_binary:
+        class: '%doc_api_controller_get_one_binary.class%'
+        public: true
+        arguments:
+            - '@sfynx.apimedia.manager.media.entity'
+
+    doc_api_controller_get_endpoint:
+        class: '%doc_api_controller_get_endpoint.class%'
+        public: true
+        arguments:
+            - '@sfynx.apimedia.manager.media.entity'

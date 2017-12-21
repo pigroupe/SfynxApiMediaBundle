@@ -1,0 +1,4 @@
+#SfynxApiMediaBundle:Media
+sfynx_api_media_media:
+    resource: "@SfynxApiMediaBundle/Resources/config/routing/media.yml"
+    prefix: /

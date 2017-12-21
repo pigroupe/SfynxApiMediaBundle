@@ -1,0 +1,55 @@
+#
+# COMMAND ROUTES
+#
+sfynx_api_media_presentation_media_create_one:
+    path: /media
+    defaults: { _controller: doc_api_controller_create_one:execute }
+    methods: POST
+
+sfynx_api_media_presentation_media_update_one:
+    path: /media/{reference}
+    defaults: { _controller: doc_api_controller_update_one:execute }
+    methods: PUT
+    requirements:
+        reference: '[-\w]+'
+
+sfynx_api_media_presentation_media_delete_one:
+    path: /media/{reference}
+    defaults: { _controller: doc_api_controller_delete_one:execute }
+    methods: DELETE
+    requirements:
+        reference: '[-\w]+'
+
+#
+# QUERY ROUTES
+#
+sfynx_api_media_presentation_media_get_one_1:
+    path: /media/{reference}.{_format}
+    defaults: { _controller: doc_api_controller_get_one:execute, _format: 'json' }
+    methods: GET
+    requirements:
+        reference: '[-\w]+'
+        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt'
+
+sfynx_api_media_presentation_media_get_one_2:
+    path: /media/{reference}
+    defaults: { _controller: doc_api_controller_get_one:execute }
+    methods: GET
+    requirements:
+        reference: '[-\w]+'
+
+sfynx_api_media_presentation_media_get_one_binary:
+    path: /media/{reference}/{_format}.bin
+    defaults: { _controller: doc_api_controller_get_one_binary:execute, _format: null }
+    methods: GET
+    requirements:
+        reference: '[-\w]+'
+        _format: \d+
+
+sfynx_api_media_presentation_media_get_endpoint:
+    path: /endpoint/{reference}.{_format}
+    defaults: { _controller: doc_api_controller_get_endpoint:execute, _format: "json" }
+    methods: GET
+    requirements:
+        reference: '[-\w]+'
+        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt'
