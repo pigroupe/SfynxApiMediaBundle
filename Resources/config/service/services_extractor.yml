@@ -1,0 +1,15 @@
+services:
+
+    ## Metadata Extrators ##
+    sfynx_api_media.metadata_extractor.image:
+        class: Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\ImageMetadataExtractor
+        public: false
+        tags:
+            - { name: sfynx_api_media.metadata_extractor }
+
+    # Keep the default metadata extractor in last position
+    sfynx_api_media.metadata_extractor.default:
+        class: Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\DefaultMetadataExtractor
+        public: false
+        tags:
+            - { name: sfynx_api_media.metadata_extractor }

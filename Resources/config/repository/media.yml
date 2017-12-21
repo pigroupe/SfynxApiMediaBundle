@@ -1,0 +1,26 @@
+parameters:
+    # Manager class
+    sfynx.apimedia.manager.media.entity.class: Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager\EntityManager
+    # Adapter factory class
+    sfynx.apimedia.factory.media.class: Sfynx\CoreBundle\Layers\Infrastructure\Persistence\Factory\MultiAdapterFactory
+    # Entity class value
+    sfynx.apimedia.manager.media.params:
+      class: '%sfynx.apimedia.media_class%'
+    # Reposioty names
+    sfynx.apimedia.repository.media.orm.command.class: Sfynx\ApiMediaBundle\Layers\Infrastructure\Persistence\Adapter\Command\Orm\MediaRepository
+    sfynx.apimedia.repository.media.orm.query.class: Sfynx\ApiMediaBundle\Layers\Infrastructure\Persistence\Adapter\Query\Orm\MediaRepository
+
+services:
+    #
+    # configuration of the user manager working with Orm, Odm, Couchdb
+    #
+    sfynx.apimedia.manager.media.entity:
+        class: '%sfynx.apimedia.manager.media.entity.class%'
+        arguments:
+            - '@sfynx.apimedia.factory.media'
+            - '@event_dispatcher'
+            - '@knp_gaufrette.filesystem_map'
+            - '%sfynx_api_media.cache_directory%'
+            - '%sfynx_api_media.configuration%'
+        calls:
+            - [ setParams, [ '%sfynx.apimedia.manager.media.params%' ] ]
