@@ -48,6 +48,131 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     protected $mediaTransformers;
 
     /**
+     * @var array $defaults List of default values for optional parameters.
+     */
+    protected $defaults = [
+        'blob_storage'       => null,
+        'storage_providers'  => [],
+        'storage_provider'   => null,
+        'mapping'            => null,
+        'description'        => null,
+        'extension'          => null,
+        'ip_source'          => null,
+        'metadata'           => [],
+        'mime_type'          => null,
+        'name'               => null,
+        'processing_file'    => null,
+        'size'               => null,
+        'source'             => null,
+        'reference'          => null,
+        'reference_prefix'   => null,
+    ];
+
+    /**
+     * @var string[] $required List of required parameters for each methods.
+     */
+    protected $required = [
+        'api_public_endpoint',
+        'cache_directory',
+        'media',
+        'working_directory',
+        'storage_providers',
+        'storage_provider',
+    ];
+
+    /**
+     * @var array[] $allowedTypes List of allowed types for each methods.
+     */
+    protected $allowedTypes = [
+        'mapping'             => array('null', 'array'),
+        'storage_providers'   => array('null', 'array'),
+        'storage_provider'    => array('string'),
+        'api_public_endpoint' => array('string'),
+        'cache_directory'     => array('string'),
+        'working_directory'   => array('string'),
+        'description'         => array('null', 'string'),
+        'extension'           => array('null', 'string'),
+        'ip_source'           => array('null', 'string'),
+        'media'               => array('Symfony\Component\HttpFoundation\File\UploadedFile'),
+        'metadata'            => array('null', 'string', 'array'),
+        'mime_type'           => array('null', 'string'),
+        'name'                => array('null', 'string'),
+        'processing_file'     => array('null', 'Symfony\Component\HttpFoundation\File\File'),
+        'size'                => array('null', 'integer'),
+        'source'              => array('null', 'string'),
+        'reference'           => array('null', 'string'),
+        'reference_prefix'    => array('null', 'string'),
+    ];
+
+    /**
+     * @var array[] $normalizers List of normalizers transformation for each methods.
+     */
+    protected function getNormalizers()
+    {
+        return [
+            'description' => function (Options $options, $value) {
+                if (null !== $value) {
+                    return $value;
+                }
+                return $options['media']->getClientOriginalName();
+            },
+            'extension' => function (Options $options, $value) {
+                return $options['media']->guessExtension();
+            },
+            'metadata' => function (Options $options, $value) {
+                if (null === $value) {
+                    return [];
+                }
+                if (is_array($value)) {
+                    return $value;
+                }
+                $decodedMetadata = json_decode($value, true);
+
+                if (null === $decodedMetadata) {
+                    return [];
+                }
+
+                return $decodedMetadata;
+            },
+            'mime_type' => function (Options $options, $value) {
+                return $options['media']->getMimeType();
+            },
+            'name' => function (Options $options, $value) {
+                if (null !== $value) {
+                    return $value;
+                }
+                return $options['media']->getClientOriginalName();
+            },
+            'processing_file' => function (Options $options, $value) {
+                return $options['media']->move(
+                    $options['working_directory'],
+                    uniqid('tmp_media_')
+                );
+            },
+            'size' => function (Options $options, $value) {
+                return $options['processing_file']->getSize();
+            },
+            'reference' => function (Options $options, $value) {
+                $now = new \DateTime();
+
+                return sprintf('%s-%s-%s-%d',
+                    sprintf("%u", crc32($options['source'])),
+                    $now->format('U'),
+                    md5(sprintf("%s%s%s",
+                        $options['mime_type'],
+                        $options['name'],
+                        $options['size']
+                    )),
+                    rand(0, 9999)
+                );
+            },
+            'reference_prefix' => function (Options $options, $value) {
+                return EntityManager::guessReferencePrefix($options);
+            }
+        ];
+    }
+
+    /**
      * Constructor
      *
      * @param AdapterFactoryInterface $factory
@@ -435,118 +560,19 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /**
      * Setup parameters.
      *
-     * @param OptionsResolverInterface $resolver.
+     * @param OptionsResolver $resolver.
      * @return array
      */
-    protected function setupParameters(OptionsResolverInterface $resolver)
+    protected function setupParameters(OptionsResolver $resolver)
     {
-        $resolver
-            ->setRequired([
-                'api_public_endpoint',
-                'cache_directory',
-                'media',
-                'working_directory',
-                'storage_providers',
-                'storage_provider',
-            ])
-            ->setDefaults([
-                'blob_storage'       => null,
-                'storage_providers'  => [],
-                'storage_provider'   => null,
-                'mapping'            => null,
-                'description'        => null,
-                'extension'          => null,
-                'ip_source'          => null,
-                'metadata'           => [],
-                'mime_type'          => null,
-                'name'               => null,
-                'processing_file'    => null,
-                'size'               => null,
-                'source'             => null,
-                'reference'          => null,
-                'reference_prefix'   => null,
-            ])
-            ->setAllowedTypes([
-                'mapping'             => array('null', 'array'),
-                'storage_providers'   => array('null', 'array'),
-                'storage_provider'    => array('string'),
-                'api_public_endpoint' => array('string'),
-                'cache_directory'     => array('string'),
-                'working_directory'   => array('string'),
-                'description'         => array('null', 'string'),
-                'extension'           => array('null', 'string'),
-                'ip_source'           => array('null', 'string'),
-                'media'               => array('Symfony\Component\HttpFoundation\File\UploadedFile'),
-                'metadata'            => array('null', 'string', 'array'),
-                'mime_type'           => array('null', 'string'),
-                'name'                => array('null', 'string'),
-                'processing_file'     => array('null', 'Symfony\Component\HttpFoundation\File\File'),
-                'size'                => array('null', 'integer'),
-                'source'              => array('null', 'string'),
-                'reference'           => array('null', 'string'),
-                'reference_prefix'    => array('null', 'string'),
-            ])
-            ->setNormalizers([
-                'description'      => function(Options $options, $value) {
-                    if (null !== $value) {
-                        return $value;
-                    }
-                    return $options['media']->getClientOriginalName();
-                },
-                'extension'        => function(Options $options, $value) {
-                    return $options['media']->guessExtension();
-                },
-                'metadata'         => function(Options $options, $value) {
-                    if (null === $value) {
-                        return [];
-                    }
-                    if (is_array($value)) {
-                        return $value;
-                    }
-                    $decodedMetadata = json_decode($value, true);
+        $resolver->setDefaults($this->defaults);
+        $resolver->setRequired($this->required);
 
-                    if (null === $decodedMetadata) {
-                        return [];
-                    }
-
-                    return $decodedMetadata;
-                },
-                'mime_type'        => function(Options $options, $value) {
-                    return $options['media']->getMimeType();
-                },
-                'name'             => function(Options $options, $value) {
-                    if (null !== $value) {
-                        return $value;
-                    }
-                    return $options['media']->getClientOriginalName();
-                },
-                'processing_file'  => function(Options $options, $value) {
-                    return $options['media']->move(
-                        $options['working_directory'],
-                        uniqid('tmp_media_')
-                    );
-                },
-                'size'             => function(Options $options, $value) {
-                    return $options['processing_file']->getSize();
-                },
-                'reference'        => function(Options $options, $value) {
-                    $now = new \DateTime();
-
-                    return sprintf('%s-%s-%s-%d',
-                        sprintf("%u", crc32($options['source'])),
-                        $now->format('U'),
-                        md5(sprintf("%s%s%s",
-                            $options['mime_type'],
-                            $options['name'],
-                            $options['size']
-                        )),
-                        rand(0, 9999)
-                    );
-                },
-                'reference_prefix' => function(Options $options, $value) {
-                    return EntityManager::guessReferencePrefix($options);
-                },
-            ])
-        ;
+        foreach ($this->allowedTypes as $optionName => $optionTypes) {
+            $resolver->setAllowedTypes($optionName, $optionTypes);
+        }
+        foreach ($this->getNormalizers() as $optionName => $optionValues) {
+            $resolver->setNormalizer($optionName, $optionValues);
+        }
     }
 }

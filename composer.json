@@ -18,7 +18,7 @@
 
   "require": {
     "php": ">=7.0",
-    "ext-imagick":                  "*",
+    "ext-imagick": "*",
     "symfony/framework-bundle": "~2.8|~3.0",
     "doctrine/orm": "*",
     "doctrine/doctrine-bundle": "*",
