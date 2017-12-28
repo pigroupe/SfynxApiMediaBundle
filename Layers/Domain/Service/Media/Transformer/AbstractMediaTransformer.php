@@ -2,7 +2,6 @@
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Gaufrette\Filesystem;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
@@ -37,9 +36,9 @@ abstract class AbstractMediaTransformer implements MediaTransformerInterface
     /**
      * Set default options
      *
-     * @param OptionsResolverInterface
+     * @param OptionsResolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([
             'storage_key',

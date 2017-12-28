@@ -3,7 +3,6 @@ namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager;
 
 use Knp\Bundle\GaufretteBundle\FilesystemMap;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -14,9 +13,11 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Generalisation\Interfaces\MediaManagerInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager\Event\MediaEvent;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager\Event\MediaEvents;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Mapper\StorageMapperInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\MetadataExtractorInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\MediaTransformerInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
+use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\NoMatchedStorageMapperException;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\NoMatchedTransformerException;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotFoundException;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaAlreadyExistException;
@@ -43,9 +44,11 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /** @var array */
     protected $configuration;
     /** @var array */
-    protected $metadataExtractors;
+    protected $metadataExtractors = [];
     /** @var array */
-    protected $mediaTransformers;
+    protected $mediaTransformers = [];
+    /** @var array */
+    protected $storageMappers = [];
 
     /**
      * @var array $defaults List of default values for optional parameters.
@@ -55,12 +58,12 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         'storage_providers'  => [],
         'storage_provider'   => null,
         'mapping'            => null,
+        'name'               => null,
         'description'        => null,
         'extension'          => null,
         'ip_source'          => null,
         'metadata'           => [],
         'mime_type'          => null,
-        'name'               => null,
         'processing_file'    => null,
         'size'               => null,
         'source'             => null,
@@ -90,13 +93,13 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         'api_public_endpoint' => array('string'),
         'cache_directory'     => array('string'),
         'working_directory'   => array('string'),
+        'name'                => array('null', 'string'),
         'description'         => array('null', 'string'),
         'extension'           => array('null', 'string'),
         'ip_source'           => array('null', 'string'),
         'media'               => array('Symfony\Component\HttpFoundation\File\UploadedFile'),
         'metadata'            => array('null', 'string', 'array'),
         'mime_type'           => array('null', 'string'),
-        'name'                => array('null', 'string'),
         'processing_file'     => array('null', 'Symfony\Component\HttpFoundation\File\File'),
         'size'                => array('null', 'integer'),
         'source'              => array('null', 'string'),
@@ -110,6 +113,12 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     protected function getNormalizers()
     {
         return [
+            'name' => function (Options $options, $value) {
+                if (null !== $value) {
+                    return $value;
+                }
+                return $options['media']->getClientOriginalName();
+            },
             'description' => function (Options $options, $value) {
                 if (null !== $value) {
                     return $value;
@@ -136,12 +145,6 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
             },
             'mime_type' => function (Options $options, $value) {
                 return $options['media']->getMimeType();
-            },
-            'name' => function (Options $options, $value) {
-                if (null !== $value) {
-                    return $value;
-                }
-                return $options['media']->getClientOriginalName();
             },
             'processing_file' => function (Options $options, $value) {
                 return $options['media']->move(
@@ -322,6 +325,36 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     }
 
     /**
+     * Add storage mapper
+     *
+     * @param StorageMapperInterface $storageMapper
+     */
+    public function addStorageMapper(StorageMapperInterface $storageMapper): EntityManager
+    {
+        $this->storageMappers[] = $storageMapper;
+        return $this;
+    }
+
+    /**
+     * Guess a storage mapper based on the given mediaRaw.
+     *
+     * @param string $mediaPath
+     * @return StorageMapperInterface
+     * @throw NoMatchedStorageProviderException
+     */
+    protected function guessStorageMapper($resolvedParameters)
+    {
+        foreach ($this->storageMappers as $storageMapper) {
+            if ($storageMapper->getStorageProvider() == $resolvedParameters['storage_provider']
+                && $storageMapper->checkRules($resolvedParameters['processing_file']->getRealPath())
+            ) {
+                return $storageMapper->getStorageProvider();
+            }
+        }
+        throw new NoMatchedStorageMapperException();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function retrieveMedia($reference): Media
@@ -353,7 +386,10 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
             throw new MediaAlreadyExistException();
         }
 
-        $provider = $this->getFilesystemMap()->get($resolvedParameters['storage_provider']);
+//        $storageProvider = $this->guessStorageMapper($resolvedParameters);
+        $storageProvider = $resolvedParameters['storage_provider'];
+
+        $provider = $this->getFilesystemMap()->get($storageProvider);
         $provider->write(
             $this->buildStorageKey(
                 $resolvedParameters['reference_prefix'],
