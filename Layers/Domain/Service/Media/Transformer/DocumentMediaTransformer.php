@@ -7,7 +7,6 @@
 
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Gaufrette\Filesystem;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;

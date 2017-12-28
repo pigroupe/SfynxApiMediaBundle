@@ -2,7 +2,7 @@
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Gaufrette\Filesystem;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
@@ -34,12 +34,12 @@ class ImageMediaTransformer extends AbstractMediaTransformer
     /**
      * {@inheritdoc}
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         parent::setDefaultOptions($resolver);
 
         $resolver
-            ->setOptional([
+            ->setDefined([
                 'resize',
                 'scale',
                 'grayscale',

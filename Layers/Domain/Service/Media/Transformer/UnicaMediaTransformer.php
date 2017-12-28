@@ -1,7 +1,6 @@
 <?php
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Process\Process;
