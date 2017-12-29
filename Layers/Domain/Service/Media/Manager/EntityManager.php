@@ -126,7 +126,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
                 return $options['media']->getClientOriginalName();
             },
             'extension' => function (Options $options, $value) {
-                return $options['media']->guessExtension();
+                return $options['media']->getClientOriginalExtension();
             },
             'metadata' => function (Options $options, $value) {
                 if (null === $value) {
@@ -144,7 +144,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
                 return $decodedMetadata;
             },
             'mime_type' => function (Options $options, $value) {
-                return $options['media']->getMimeType();
+                return $options['media']->getClientMimeType();
             },
             'processing_file' => function (Options $options, $value) {
                 return $options['media']->move(
@@ -443,8 +443,8 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         );
 
         $media
-            ->setExtension($file->guessExtension())
-            ->setMimeType($file->getMimeType())
+            ->setExtension($file->getClientOriginalExtension())
+            ->setMimeType($file->getClientMimeType())
             ->setName($media->getUploadedFile()->getClientOriginalName())
             ->setSize($file->getSize())
         ;
