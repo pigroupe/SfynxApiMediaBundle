@@ -13,7 +13,7 @@ use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotFoundException;
  * @package    Presentation
  * @subpackage Coordination\Media\Query
  */
-class GetOnBinaryController
+class GetOneBinaryController
 {
     /** @var MediaManagerInterface */
     protected $manager;
