@@ -29,9 +29,10 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-            ->scalarNode('api_public_endpoint')->isRequired()->end()
-            ->scalarNode('working_directory')->isRequired()->end()
-            ->scalarNode('cache_directory')->isRequired()->end()
+                ->scalarNode('api_public_endpoint')->isRequired()->end()
+                ->scalarNode('working_directory')->isRequired()->end()
+                ->scalarNode('cache_directory')->isRequired()->end()
+                ->scalarNode('cache_storage_provider')->defaultValue('')->end()
             ->end()
         ;
 

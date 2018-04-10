@@ -7,7 +7,8 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+//use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Validator\Exception\InvalidOptionsException;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Generalisation\Interfaces\MediaManagerInterface;
@@ -57,6 +58,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         'blob_storage'       => null,
         'storage_providers'  => [],
         'storage_provider'   => null,
+        'cache_storage_provider' => null,
         'mapping'            => null,
         'name'               => null,
         'description'        => null,
@@ -92,6 +94,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         'storage_provider'    => array('string'),
         'api_public_endpoint' => array('string'),
         'cache_directory'     => array('string'),
+        'cache_storage_provider' => array('null', 'string'),
         'working_directory'   => array('string'),
         'name'                => array('null', 'string'),
         'description'         => array('null', 'string'),
@@ -208,7 +211,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
      */
     public function __call($method, $args)
     {
-        return call_user_func_array(array($this->getRepositoryQuery(), $method), $args);
+        return call_user_func_array(array($this->getQueryRepository(), $method), $args);
     }
 
     /**
@@ -497,6 +500,12 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     public function transform(Media $media, $options): ResponseMedia
     {
         $mediaTransformer = $this->guessMediaTransformer($options['format']);
+
+        if (isset($options['cacheStorageProvider'])
+            && !empty($options['cacheStorageProvider'])
+        ) {
+            $options['cacheStorageProvider'] = $this->getFilesystemMap()->get($options['cacheStorageProvider']);
+        }
 
         return $mediaTransformer->transform(
             $this->getFilesystemMap()->get($media->getProviderServiceName()),

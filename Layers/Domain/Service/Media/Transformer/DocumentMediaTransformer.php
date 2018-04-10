@@ -1,14 +1,15 @@
 <?php
-
-/**
- * @author:  Gabriel BONDAZ <gabriel.bondaz@idci-consulting.fr>
- * @license: GPL
- */
-
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
+use Gaufrette\FilesystemInterface;
+
+use Sfynx\CoreBundle\Layers\Application\Command\WorkflowCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
-use Gaufrette\Filesystem;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetDefaultResponseMedia;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler\CommandHandler;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\DocumentResolver;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\UnavailableTransformationException;
 
@@ -19,27 +20,30 @@ class DocumentMediaTransformer extends AbstractMediaTransformer
      */
     protected function getAvailableFormats()
     {
-        return array('pdf', 'doc', 'docx', 'rtf', 'xls', 'xlsx', 'odt');
+        return DocumentResolver::FORMATS;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(Filesystem $storageProvider, Media $media, array $options = [])
+    public function process(FilesystemInterface $storageProvider, Media $media, array $options = [])
     {
-        $responseMedia = new ResponseMedia();
+        // 1. Transform options to Command.
+        $adapter = new CommandAdapter(new DefaultCommand());
+        $command = $adapter->createCommandFromResolver(
+            new DocumentResolver($options)
+        );
 
-        if ($options['format'] !== $media->getExtension()) {
-            throw new UnavailableTransformationException($options);
-        }
+        // 2. Implement the command workflow
+        $Observer1 = new OBSetDefaultResponseMedia($media, $storageProvider);
+        $workflowCommand = (new WorkflowCommand())
+            ->attach($Observer1)
+            ;
 
-        $responseMedia
-            ->setContent($storageProvider->read($options['storage_key']))
-            ->setContentType($media->getMimeType())
-            ->setContentLength($media->getSize())
-            ->setLastModifiedAt($media->getCreatedAt())
-        ;
+        // 3. Implement handler decorator to apply the command workflow from the command
+        $this->commandHandler = new CommandHandler($workflowCommand);
+        $this->commandHandler->process($command);
 
-        return $responseMedia;
+        return $this->commandHandler->createResponseMedia();
     }
 }

@@ -3,6 +3,7 @@ services:
     ## Media Transformers ##
     sfynx_api_media.transformer.document:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\DocumentMediaTransformer'
+        arguments: ['%sfynx_api_media.cache_directory%']
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
@@ -16,6 +17,7 @@ services:
 
     sfynx_api_media.transformer.rest:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\RestMediaTransformer'
+        arguments: ['%sfynx_api_media.cache_directory%']
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
@@ -37,6 +39,7 @@ services:
     # Keep the default transformer in last position
     sfynx_api_media.transformer.default:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\DefaultMediaTransformer'
+        arguments: ['%sfynx_api_media.cache_directory%']
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
