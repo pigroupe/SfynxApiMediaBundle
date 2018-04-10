@@ -37,6 +37,7 @@ services:
         public: true
         arguments:
             - '@sfynx.apimedia.manager.media.entity'
+            - '%sfynx_api_media.cache_storage_provider%'
 
     doc_api_controller_get_one_binary:
         class: '%doc_api_controller_get_one_binary.class%'

@@ -7,9 +7,8 @@
 
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
-use Gaufrette\Filesystem;
+use Gaufrette\FilesystemInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
-use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 
 interface MediaTransformerInterface
 {
@@ -28,5 +27,5 @@ interface MediaTransformerInterface
      * @param Media $media
      * @return ResponseMedia
      */
-    public function transform(Filesystem $storageProvider, Media $media, array $options = array());
+    public function transform(FilesystemInterface $storageProvider, Media $media, array $options = []);
 }

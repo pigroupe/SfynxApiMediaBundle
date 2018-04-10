@@ -3,6 +3,7 @@ namespace Sfynx\ApiMediaBundle\Layers\Presentation\Coordination\Media\Query;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Exception\InvalidOptionsException;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Generalisation\Interfaces\MediaManagerInterface;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotFoundException;
@@ -18,14 +19,18 @@ class GetOneController
 {
     /** @var MediaManagerInterface */
     protected $manager;
+    /** @var string */
+    protected $cacheStorageProvider;
 
     /**
      * GetOneController constructor.
      * @param MediaManagerInterface $manager
+     * @param string $cacheStorageProvider
      */
-    public function __construct(MediaManagerInterface $manager)
+    public function __construct(MediaManagerInterface $manager, string $cacheStorageProvider)
     {
         $this->manager = $manager;
+        $this->cacheStorageProvider = $cacheStorageProvider;
     }
 
     /**
@@ -41,17 +46,21 @@ class GetOneController
         try {
             $media = $this->manager->retrieveMedia($reference);
             try {
-                $responseMedia = $this->manager->transform(
-                    $media,
+                $responseMedia = $this->manager->transform($media,
                     array_merge(
                         $request->query->all(),
-                        array('format' => $_format)
+                        [
+                            'format' => $_format,
+                            'cacheStorageProvider' => $this->cacheStorageProvider
+                        ]
                     )
                 );
             } catch (InvalidOptionsException $e) {
-                $responseMedia = $this->manager->transform(
-                    $media,
-                    array('format' => $_format)
+                $responseMedia = $this->manager->transform($media,
+                    [
+                        'format' => $_format,
+                        'cacheStorageProvider' => $this->cacheStorageProvider
+                    ]
                 );
             }
 

@@ -30,6 +30,7 @@ class SfynxApiMediaExtension extends Extension
 
         $container->setParameter('sfynx_api_media.configuration', $config);
         $container->setParameter('sfynx_api_media.cache_directory', $config['cache_directory']);
+        $container->setParameter('sfynx_api_media.cache_storage_provider', $config['cache_storage_provider']);
 
         /*
          * Blob Storage config parameter

@@ -29,7 +29,7 @@ sfynx_api_media_presentation_media_get_one_1:
     methods: GET
     requirements:
         reference: '[-\w]+'
-        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt'
+        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt|JSON|XML|CSV|JPEG|JPG|PNG|GIF|PDF|DOC|DOCX|RTF|XLS|XLSX|ODT'
 
 sfynx_api_media_presentation_media_get_one_2:
     path: /media/{reference}
@@ -52,4 +52,4 @@ sfynx_api_media_presentation_media_get_endpoint:
     methods: GET
     requirements:
         reference: '[-\w]+'
-        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt'
+        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt|JSON|XML|CSV|JPEG|JPG|PNG|GIF|PDF|DOC|DOCX|RTF|XLS|XLSX|ODT'

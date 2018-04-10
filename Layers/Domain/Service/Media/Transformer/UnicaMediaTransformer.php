@@ -5,7 +5,7 @@ use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Gaufrette\Filesystem;
+use Gaufrette\FilesystemInterface;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
@@ -49,7 +49,7 @@ class UnicaMediaTransformer extends AbstractMediaTransformer
     /**
      * {@inheritdoc}
      */
-    public function process(Filesystem $storageProvider, Media $media, array $options = array())
+    public function process(FilesystemInterface $storageProvider, Media $media, array $options = [])
     {
         if ('batch_media' !== $media->getProviderServiceName()) {
             throw new UnavailableTransformationException(array(

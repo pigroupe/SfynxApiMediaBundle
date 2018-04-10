@@ -8,8 +8,14 @@
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
-use Gaufrette\Filesystem;
-use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
+use Gaufrette\FilesystemInterface;
+
+use Sfynx\CoreBundle\Layers\Application\Command\WorkflowCommand;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetDefaultResponseMedia;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler\CommandHandler;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\RestResolver;
 
 class DefaultMediaTransformer extends AbstractMediaTransformer
 {
@@ -18,21 +24,30 @@ class DefaultMediaTransformer extends AbstractMediaTransformer
      */
     protected function getAvailableFormats()
     {
-        return array(null);
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function process(Filesystem $storageProvider, Media $media, array $options = array())
+    public function process(FilesystemInterface $storageProvider, Media $media, array $options = [])
     {
-        $responseMedia = new ResponseMedia();
-        $responseMedia
-            ->setContent($storageProvider->read($options['storage_key']))
-            ->setContentType($media->getMimeType())
-            ->setLastModifiedAt($media->getCreatedAt())
+        // 1. Transform options to Command.
+        $adapter = new CommandAdapter(new DefaultCommand());
+        $command = $adapter->createCommandFromResolver(
+            new RestResolver($options)
+        );
+
+        // 2. Implement the command workflow
+        $Observer1 = new OBSetDefaultResponseMedia($media, $storageProvider);
+        $workflowCommand = (new WorkflowCommand())
+            ->attach($Observer1)
         ;
 
-        return $responseMedia;
+        // 3. Implement handler decorator to apply the command workflow from the command
+        $this->commandHandler = new CommandHandler($workflowCommand);
+        $this->commandHandler->process($command);
+
+        return $this->commandHandler->createResponseMedia();
     }
 }
