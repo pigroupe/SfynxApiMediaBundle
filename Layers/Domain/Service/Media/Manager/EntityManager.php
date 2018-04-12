@@ -245,14 +245,14 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /**
      * {@inheritdoc}
      */
-    public function update(EntityInterface $entity, $andFlush = true): void
+    public function update(EntityInterface $entity, $flush = true): void
     {
         $this->getEventDispatcher()->dispatch(
             MediaEvents::PRE_UPDATE,
             new MediaEvent($entity)
         );
 
-        $this->getCommandRepository()->merge($entity, true);
+        $this->getCommandRepository()->merge($entity, $flush);
 
         $this->getEventDispatcher()->dispatch(
             MediaEvents::POST_UPDATE,
@@ -263,14 +263,14 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /**
      * {@inheritdoc}
      */
-    public function delete(EntityInterface $entity): void
+    public function delete(EntityInterface $entity, $flush = true): void
     {
         $this->getEventDispatcher()->dispatch(
             MediaEvents::PRE_DELETE,
             new MediaEvent($entity)
         );
 
-        $this->getCommandRepository()->remove($entity, true);
+        $this->getCommandRepository()->remove($entity, $flush);
 
         $this->getEventDispatcher()->dispatch(
             MediaEvents::POST_DELETE,
