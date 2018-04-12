@@ -42,7 +42,7 @@ class UpdateOneController
                 $media->getMetadata(),
                 $request->request->get('metadata', [])
             ));
-            $this->manager->merge($media, true);
+            $this->manager->update($media, true);
             $response->setStatusCode(Response::HTTP_OK);
         } catch (MediaNotFoundException $e) {
             $response->setStatusCode(Response::HTTP_NOT_FOUND);

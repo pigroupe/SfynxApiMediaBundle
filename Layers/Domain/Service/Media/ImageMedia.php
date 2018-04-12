@@ -36,7 +36,10 @@ class ImageMedia
             throw new ImagickException('writeImage');
         }
         $this->imagick->destroy();
-        unlink($this->sourcePath);
+        // IMPORTANT to avoid error when multiple GET urls have benn send in same time with the same reference and differents queries
+        try {
+            unlink($this->sourcePath);
+        } catch (\Exception $e) {}
 
         return true;
     }
