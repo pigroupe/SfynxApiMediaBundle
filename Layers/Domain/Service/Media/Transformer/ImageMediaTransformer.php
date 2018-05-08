@@ -5,7 +5,7 @@ use Symfony\Component\Filesystem\Filesystem as SymfonyFilesystem;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Gaufrette\FilesystemInterface;
 
-use Sfynx\CoreBundle\Layers\Application\Command\WorkflowCommand;
+use Sfynx\CoreBundle\Layers\Application\Command\Workflow\CommandWorkflow;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\MediaCommand;
@@ -49,7 +49,7 @@ class ImageMediaTransformer extends AbstractMediaTransformer
         $Observer6 = new OBCreateCacheStorageFile();
         $Observer7 = new OBDeleteCacheLocaleFileIfCacheStorage();
 
-        $workflowCommand = (new WorkflowCommand())
+        $workflowCommand = (new CommandWorkflow())
             ->attach($Observer1)
             ->attach($Observer2)
             ->attach($Observer3)

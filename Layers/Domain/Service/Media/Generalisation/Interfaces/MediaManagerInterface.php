@@ -9,7 +9,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\MetadataExtractorInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\MediaTransformerInterface;
 
-use Sfynx\CoreBundle\Layers\Domain\Model\Interfaces\EntityInterface;
+
 
 /**
  * Query Repository Interface
@@ -21,9 +21,11 @@ use Sfynx\CoreBundle\Layers\Domain\Model\Interfaces\EntityInterface;
 interface MediaManagerInterface
 {
     /**
-     * {@inheritdoc}
+     * @param object $entity
+     * @param bool $flush
+     * @return void
      */
-    public function add(EntityInterface $entity, $flush = true): void;
+    public function add(object $entity, $flush = true): void;
 
     /**
      * Add metadata extractor

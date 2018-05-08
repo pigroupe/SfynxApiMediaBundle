@@ -3,7 +3,7 @@ namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
 use Gaufrette\FilesystemInterface;
 
-use Sfynx\CoreBundle\Layers\Application\Command\WorkflowCommand;
+use Sfynx\CoreBundle\Layers\Application\Command\Workflow\CommandWorkflow;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
@@ -36,7 +36,7 @@ class DocumentMediaTransformer extends AbstractMediaTransformer
 
         // 2. Implement the command workflow
         $Observer1 = new OBSetDefaultResponseMedia($media, $storageProvider);
-        $workflowCommand = (new WorkflowCommand())
+        $workflowCommand = (new CommandWorkflow())
             ->attach($Observer1)
             ;
 
