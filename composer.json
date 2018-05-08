@@ -24,7 +24,7 @@
     "doctrine/doctrine-bundle": "*",
     "knplabs/knp-gaufrette-bundle": "~0.4",
     "sfynx-project/tool-crawler-bundle": "~2.8.1",
-    "sfynx-project/core-bundle": "~2.9.0"
+    "sfynx-project/core-bundle": "^2.9",
   },
 
   "require-dev": {

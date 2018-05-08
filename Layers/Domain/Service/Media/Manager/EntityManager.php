@@ -23,7 +23,7 @@ use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\NoMatchedTransformerExc
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotFoundException;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaAlreadyExistException;
 
-use Sfynx\CoreBundle\Layers\Domain\Model\Interfaces\EntityInterface;
+
 use Sfynx\CoreBundle\Layers\Domain\Service\Manager\Generalisation\Interfaces\ManagerInterface;
 use Sfynx\CoreBundle\Layers\Domain\Service\Manager\Generalisation\AbstractManager;
 use Sfynx\CoreBundle\Layers\Infrastructure\Persistence\Factory\Generalisation\AdapterFactoryInterface;
@@ -227,14 +227,14 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /**
      * {@inheritdoc}
      */
-    public function add(EntityInterface $entity, $flush = true): void
+    public function add(object $entity, $andFlush = true): void
     {
         $this->getEventDispatcher()->dispatch(
             MediaEvents::PRE_CREATE,
             new MediaEvent($entity)
         );
 
-        $this->getCommandRepository()->persist($entity, $flush);
+        $this->getCommandRepository()->persist($entity, $andFlush);
 
         $this->getEventDispatcher()->dispatch(
             MediaEvents::POST_CREATE,
@@ -245,14 +245,14 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /**
      * {@inheritdoc}
      */
-    public function update(EntityInterface $entity, $flush = true): void
+    public function update(object $entity, $andFlush = true): void
     {
         $this->getEventDispatcher()->dispatch(
             MediaEvents::PRE_UPDATE,
             new MediaEvent($entity)
         );
 
-        $this->getCommandRepository()->merge($entity, $flush);
+        $this->getCommandRepository()->merge($entity, $andFlush);
 
         $this->getEventDispatcher()->dispatch(
             MediaEvents::POST_UPDATE,
@@ -263,14 +263,14 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
     /**
      * {@inheritdoc}
      */
-    public function delete(EntityInterface $entity, $flush = true): void
+    public function delete(object $entity, $andFlush = true): void
     {
         $this->getEventDispatcher()->dispatch(
             MediaEvents::PRE_DELETE,
             new MediaEvent($entity)
         );
 
-        $this->getCommandRepository()->remove($entity, $flush);
+        $this->getCommandRepository()->remove($entity, $andFlush);
 
         $this->getEventDispatcher()->dispatch(
             MediaEvents::POST_DELETE,

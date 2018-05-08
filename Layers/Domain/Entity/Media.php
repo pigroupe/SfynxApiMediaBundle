@@ -4,7 +4,7 @@ namespace Sfynx\ApiMediaBundle\Layers\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use Sfynx\CoreBundle\Layers\Domain\Model\Interfaces\EntityInterface;
+
 
 /**
  * Media
@@ -19,7 +19,7 @@ use Sfynx\CoreBundle\Layers\Domain\Model\Interfaces\EntityInterface;
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
  */
-class Media implements EntityInterface
+class Media  
 {
     /**
      * @var integer

@@ -2,9 +2,9 @@
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler;
 
 use Exception;
-use Sfynx\CoreBundle\Layers\Application\Command\Generalisation\Interfaces\CommandHandlerInterface;
+use Sfynx\CoreBundle\Layers\Application\Command\Handler\Generalisation\Interfaces\CommandHandlerInterface;
 use Sfynx\CoreBundle\Layers\Application\Command\Generalisation\Interfaces\CommandInterface;
-use Sfynx\CoreBundle\Layers\Application\Command\Generalisation\Interfaces\WorkflowCommandInterface;
+use Sfynx\CoreBundle\Layers\Application\Command\Workflow\Generalisation\Interfaces\CommandWorkflowInterface;
 use Sfynx\CoreBundle\Layers\Infrastructure\Exception\WorkflowException;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 
@@ -18,7 +18,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
  */
 class CommandHandler implements CommandHandlerInterface
 {
-    /** @var WorkflowCommandInterface */
+    /** @var CommandWorkflowInterface */
     protected $workflowCommand;
     /** @var string */
     protected $fileGetContents = '';
@@ -30,9 +30,9 @@ class CommandHandler implements CommandHandlerInterface
     protected $date = null;
 
     /**
-     * @param WorkflowCommandInterface $workflowCommand
+     * @param CommandWorkflowInterface $workflowCommand
      */
-    public function __construct(WorkflowCommandInterface $workflowCommand)
+    public function __construct(CommandWorkflowInterface $workflowCommand)
     {
         $this->workflowCommand = $workflowCommand;
     }
