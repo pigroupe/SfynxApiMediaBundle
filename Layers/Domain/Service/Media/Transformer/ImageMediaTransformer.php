@@ -7,6 +7,7 @@ use Gaufrette\FilesystemInterface;
 
 use Sfynx\CoreBundle\Layers\Application\Command\Workflow\CommandWorkflow;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\AbstractMediaTransformer;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\MediaCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\MediaResolver;
@@ -41,22 +42,14 @@ class ImageMediaTransformer extends AbstractMediaTransformer
         );
 
         // 2. Implement the command workflow
-        $Observer1 = new OBSetParameters($media);
-        $Observer2 = new OBSetResponseFromeOriginalStorage($media, $storageProvider);
-        $Observer3 = new OBSetResponseFromCacheStorage($media, $storageProvider);
-        $Observer4 = new OBSetImageLocaleIfNoExistedInCacheStorage($media, $storageProvider);
-        $Observer5 = new OBSetResponseFromCacheLocal();
-        $Observer6 = new OBCreateCacheStorageFile();
-        $Observer7 = new OBDeleteCacheLocaleFileIfCacheStorage();
-
         $workflowCommand = (new CommandWorkflow())
-            ->attach($Observer1)
-            ->attach($Observer2)
-            ->attach($Observer3)
-            ->attach($Observer4)
-            ->attach($Observer5)
-            ->attach($Observer6)
-            ->attach($Observer7)
+            ->attach(new OBSetParameters($media))
+            ->attach(new OBSetResponseFromeOriginalStorage($media, $storageProvider))
+            ->attach(new OBSetResponseFromCacheStorage($media, $storageProvider))
+            ->attach(new OBSetImageLocaleIfNoExistedInCacheStorage($media, $storageProvider))
+            ->attach(new OBSetResponseFromCacheLocal())
+            ->attach(new OBCreateCacheStorageFile())
+            ->attach(new OBDeleteCacheLocaleFileIfCacheStorage())
         ;
 
         // 3. Implement handler decorator to apply the command workflow from the command

@@ -24,6 +24,9 @@ class MediaResolver extends AbstractResolver
         'format' => self::FORMATS,
         'cacheStorageProvider' => '',
         'cacheDirectory' => '/tmp',
+        'noresponse' => false,
+        'maxAge' => null,
+        'sharedMaxAge' => null,
     ];
 
     /**
@@ -40,6 +43,9 @@ class MediaResolver extends AbstractResolver
         'maxheight',
         'minwidth',
         'minheight',
+        'noresponse',
+        'maxAge',
+        'sharedMaxAge',
     ];
 
     /**
@@ -50,4 +56,24 @@ class MediaResolver extends AbstractResolver
         'format',
         'cacheDirectory',
     ];
+
+    /**
+     * @param array $options
+     * @return void
+     */
+    protected function setOptions(array $options = []): void
+    {
+        foreach (['maxAge', 'sharedMaxAge'] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data];
+            }
+        }
+
+        foreach (['noresponse'] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data] ? true : false;
+            }
+        }
+        $this->options = (null !== $options) ? $options : [];
+    }
 }

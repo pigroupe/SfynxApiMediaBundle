@@ -7,7 +7,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager\EntityManager;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\MetadataExtractorInterface;
-use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\MediaTransformerInterface;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\Interfaces\MediaTransformerInterface;
 
 
 

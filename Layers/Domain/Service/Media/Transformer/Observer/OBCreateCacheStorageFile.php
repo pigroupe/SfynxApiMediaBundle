@@ -36,8 +36,8 @@ class OBCreateCacheStorageFile extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-        if (!$this->wfLastData->HasGetOriginalContentRequested
-            && $this->wfLastData->HasCacheFromStorage
+        if (!$this->wfLastData->hasGetOriginalContentRequested
+            && $this->wfLastData->hasCacheFromStorage
             && ! $this->wfLastData->hasCachedStorageImage
         ) {
             $this->createCacheStorageFile($this->wfLastData->fileGetContents, $this->wfLastData->cacheStorageIdentifier);
@@ -53,7 +53,7 @@ class OBCreateCacheStorageFile extends AbstractObserver
      */
     protected function createCacheStorageFile(string $fileGetContents, string $storageIdentifier): void
     {
-        if ($this->wfLastData->HasCacheFromStorage) {
+        if ($this->wfLastData->hasCacheFromStorage) {
             if ($this->wfLastData->cacheProviderServiceName->has($storageIdentifier)) {
                 $this->wfLastData->cacheProviderServiceName->delete($storageIdentifier);
             }

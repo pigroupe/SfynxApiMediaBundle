@@ -1,11 +1,12 @@
 <?php
-namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
+namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Gaufrette\FilesystemInterface;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\Interfaces\MediaTransformerInterface;
 
 abstract class AbstractMediaTransformer implements MediaTransformerInterface
 {

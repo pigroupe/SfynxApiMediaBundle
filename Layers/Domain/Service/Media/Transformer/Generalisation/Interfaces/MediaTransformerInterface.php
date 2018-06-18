@@ -5,7 +5,7 @@
  * @license: GPL
  */
 
-namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
+namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\Interfaces;
 
 use Gaufrette\FilesystemInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;

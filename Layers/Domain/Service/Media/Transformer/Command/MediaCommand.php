@@ -30,4 +30,10 @@ class MediaCommand extends DefaultCommand
     protected $minwidth;
     /** @var int */
     protected $minheight;
+    /** @var bool */
+    protected $noresponse;
+    /** @var int */
+    protected $sharedMaxAge;
+    /** @var int */
+    protected $maxAge;
 }

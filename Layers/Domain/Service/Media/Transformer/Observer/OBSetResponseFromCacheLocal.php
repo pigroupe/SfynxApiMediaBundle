@@ -40,7 +40,7 @@ class OBSetResponseFromCacheLocal extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-        if (!$this->wfLastData->HasGetOriginalContentRequested
+        if (!$this->wfLastData->hasGetOriginalContentRequested
             && $this->wfLastData->hasCachedLocaleImage
         ) {
             list($this->wfLastData->fileGetContents, $this->wfLastData->mimeType, $this->wfLastData->size, $this->wfLastData->date) = [
