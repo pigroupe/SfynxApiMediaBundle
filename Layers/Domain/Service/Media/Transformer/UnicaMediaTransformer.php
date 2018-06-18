@@ -8,6 +8,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Gaufrette\FilesystemInterface;
 
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\AbstractMediaTransformer;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ImageMedia;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\UnavailableTransformationException;

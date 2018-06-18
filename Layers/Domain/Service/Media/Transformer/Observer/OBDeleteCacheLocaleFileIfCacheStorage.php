@@ -36,8 +36,8 @@ class OBDeleteCacheLocaleFileIfCacheStorage extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-        if (!$this->wfLastData->HasGetOriginalContentRequested
-            && $this->wfLastData->HasCacheFromStorage
+        if (!$this->wfLastData->hasGetOriginalContentRequested
+            && $this->wfLastData->hasCacheFromStorage
             && $this->wfLastData->hasCachedLocaleImage
         ) {
             $this->deleteCacheLocaleFileIfCacheInStorage($this->wfLastData->cachedImageSourcePath);
@@ -52,7 +52,7 @@ class OBDeleteCacheLocaleFileIfCacheStorage extends AbstractObserver
      */
     protected function deleteCacheLocaleFileIfCacheInStorage(string $sourcePath): void
     {
-        if ($this->wfLastData->HasCacheFromStorage) {
+        if ($this->wfLastData->hasCacheFromStorage) {
             unlink($sourcePath);
         }
     }

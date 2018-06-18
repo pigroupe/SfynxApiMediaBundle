@@ -48,11 +48,11 @@ class OBSetImageLocaleIfNoExistedInCacheStorage extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-        if (!$this->wfLastData->HasGetOriginalContentRequested
+        if (!$this->wfLastData->hasGetOriginalContentRequested
             && (
-                (!$this->wfLastData->HasCacheFromStorage && ! $this->wfLastData->hasCachedLocaleImage)
+                (!$this->wfLastData->hasCacheFromStorage && ! $this->wfLastData->hasCachedLocaleImage)
                 ||
-                ($this->wfLastData->HasCacheFromStorage && !$this->wfLastData->hasCachedStorageImage)
+                ($this->wfLastData->hasCacheFromStorage && !$this->wfLastData->hasCachedStorageImage)
             )
         ) {
             $options = array_filter($this->wfCommand->toArray());

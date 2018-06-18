@@ -64,14 +64,19 @@ class GetOneController
                 );
             }
 
-            $response->setPublic();
-            $response->setStatusCode(Response::HTTP_OK);
+            $response
+                ->setPublic()
+                ->setStatusCode(Response::HTTP_OK)
+                ->setETag($responseMedia->getETag())
+                ->setLastModified($responseMedia->getLastModifiedAt())
+                ->setContent($responseMedia->getContent())
+            ;
+            (null !== $responseMedia->getMaxAge()) ? $response->setMaxAge($responseMedia->getMaxAge()): false;
+            (null !== $responseMedia->getSharedMaxAge()) ? $response->setSharedMaxAge($responseMedia->getSharedMaxAge()): false;
+
             $response->headers->set('Content-Type', $responseMedia->getContentType());
             $response->headers->set('Content-Length', $responseMedia->getContentLength());
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->setETag($responseMedia->getETag());
-            $response->setLastModified($responseMedia->getLastModifiedAt());
-            $response->setContent($responseMedia->getContent());
 
             if (null !== $responseMedia->getContentDisposition()) {
                 $response->headers->set('Content-Disposition', $responseMedia->getContentDisposition());

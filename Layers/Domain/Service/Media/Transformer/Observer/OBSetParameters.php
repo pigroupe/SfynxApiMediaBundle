@@ -48,26 +48,31 @@ class OBSetParameters extends AbstractObserver
     {
         $options = array_filter($this->wfCommand->toArray());
 
+        $this->wfLastData->hasReturnContentWithoutResponse = false;
+        if (property_exists($this->wfCommand, 'noresponse')) {
+            $this->wfLastData->hasReturnContentWithoutResponse = $this->wfCommand->noresponse;
+        }
+
         $this->wfLastData->cachedImageSourcePath = $this->getCachedImageSourcePath(
             $this->media->getReference(),
             $options,
             false
         );
 
-        $this->wfLastData->HasGetOriginalContentRequested = (new SpecIsGetOriginalContent())
+        $this->wfLastData->hasGetOriginalContentRequested = (new SpecIsGetOriginalContent())
             ->isSatisfiedBy(SpecIsGetOriginalContent::setObject(
                 $this->wfCommand->format,
                 $this->media->getExtension(),
                 count($options)
             ));
 
-        $this->wfLastData->HasCacheFromStorage = (new SpecIsCacheFromStorage())
+        $this->wfLastData->hasCacheFromStorage = (new SpecIsCacheFromStorage())
             ->isSatisfiedBy(SpecIsCacheFromStorage::setObject($options));
 
         $this->wfLastData->hasCachedLocaleImage = (new SpecIsCacheLocale())
             ->isSatisfiedBy(SpecIsCacheLocale::setObject($this->wfLastData->cachedImageSourcePath));
 
-        if (!$this->wfLastData->HasGetOriginalContentRequested && $this->wfLastData->HasCacheFromStorage) {
+        if (!$this->wfLastData->hasGetOriginalContentRequested && $this->wfLastData->hasCacheFromStorage) {
             $this->wfLastData->cacheStorageIdentifier = $this->getCachedImageSourcePath(
                 $this->media->getReference(),
                 $options,

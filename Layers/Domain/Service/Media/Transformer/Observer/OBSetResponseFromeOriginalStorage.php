@@ -47,8 +47,8 @@ class OBSetResponseFromeOriginalStorage extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-        if (!property_exists($this->wfLastData, 'HasGetOriginalContentRequested')) {
-            $this->wfLastData->HasGetOriginalContentRequested = (new SpecIsGetOriginalContent())
+        if (!property_exists($this->wfLastData, 'hasGetOriginalContentRequested')) {
+            $this->wfLastData->hasGetOriginalContentRequested = (new SpecIsGetOriginalContent())
                 ->isSatisfiedBy(SpecIsGetOriginalContent::setObject(
                     $this->wfCommand->format,
                     $this->media->getExtension(),
@@ -56,7 +56,7 @@ class OBSetResponseFromeOriginalStorage extends AbstractObserver
                 ));
         }
 
-        if ($this->wfLastData->HasGetOriginalContentRequested) {
+        if ($this->wfLastData->hasGetOriginalContentRequested) {
             $originalContent = $this->storageProvider->read($this->wfCommand->storage_key);
 
             list($this->wfLastData->fileGetContents, $this->wfLastData->mimeType, $this->wfLastData->size, $this->wfLastData->date) = [

@@ -5,6 +5,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Gaufrette\FilesystemInterface;
 
 use Sfynx\CoreBundle\Layers\Application\Command\Workflow\CommandWorkflow;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\AbstractMediaTransformer;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetRestResponseMedia;
@@ -36,9 +37,8 @@ class RestMediaTransformer extends AbstractMediaTransformer
         );
 
         // 2. Implement the command workflow
-        $Observer1 = new OBSetRestResponseMedia($media, $storageProvider);
         $workflowCommand = (new CommandWorkflow())
-            ->attach($Observer1)
+            ->attach(new OBSetRestResponseMedia($media, $storageProvider))
         ;
 
         // 3. Implement handler decorator to apply the command workflow from the command

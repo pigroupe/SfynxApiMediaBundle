@@ -18,16 +18,20 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
  */
 class CommandHandler implements CommandHandlerInterface
 {
-    /** @var CommandWorkflowInterface */
+    /** @var WorkflowCommandInterface */
     protected $workflowCommand;
     /** @var string */
     protected $fileGetContents = '';
     /** @var string */
     protected $mimeType = '';
-    /** @var array */
+    /** @var int */
     protected $size = 0;
-    /** @var string */
+    /** @var Datetime */
     protected $date = null;
+    /** @var int */
+    protected $sharedMaxAge;
+    /** @var int */
+    protected $maxAge;
 
     /**
      * @param CommandWorkflowInterface $workflowCommand
@@ -50,16 +54,13 @@ class CommandHandler implements CommandHandlerInterface
 
         foreach (['fileGetContents', 'mimeType', 'size', 'date'] as $attribut) {
             if (property_exists($this->workflowCommand->getData(), $attribut)) {
-                $this->fileGetContents = end($this->workflowCommand->getData()->fileGetContents);
+                $this->$attribut = end($this->workflowCommand->getData()->$attribut);
             }
-            if (property_exists($this->workflowCommand->getData(), 'mimeType')) {
-                $this->mimeType = end($this->workflowCommand->getData()->mimeType);
-            }
-            if (property_exists($this->workflowCommand->getData(), 'size')) {
-                $this->size = end($this->workflowCommand->getData()->size);
-            }
-            if (property_exists($this->workflowCommand->getData(), 'date')) {
-                $this->date = end($this->workflowCommand->getData()->date);
+        }
+
+        foreach (['maxAge', 'sharedMaxAge'] as $attribut) {
+            if (property_exists($command, $attribut)) {
+                $this->$attribut = $command->$attribut;
             }
         }
 
@@ -77,11 +78,16 @@ class CommandHandler implements CommandHandlerInterface
      */
     public function createResponseMedia(): ResponseMedia
     {
-        return (new ResponseMedia())
+        $response = (new ResponseMedia())
             ->setContent($this->fileGetContents)
             ->setContentType($this->mimeType)
             ->setContentLength($this->size)
             ->setLastModifiedAt($this->date)
-            ;
+        ;
+
+        (null !== $this->sharedMaxAge) ? $response->setSharedMaxAge($this->sharedMaxAge): false;
+        (null !== $this->maxAge) ? $response->setMaxAge($this->maxAge): false;
+
+        return $response;
     }
 }

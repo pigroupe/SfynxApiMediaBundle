@@ -46,16 +46,27 @@ class OBSetResponseFromCacheStorage extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-        if (!$this->wfLastData->HasGetOriginalContentRequested
-            && $this->wfLastData->HasCacheFromStorage
+        if (!$this->wfLastData->hasGetOriginalContentRequested
+            && $this->wfLastData->hasCacheFromStorage
             && $this->wfLastData->hasCachedStorageImage
         ) {
-            $CacheContent = $this->storageProvider->read($this->wfLastData->cacheStorageIdentifier);
+            $cacheContent = $this->storageProvider->read($this->wfLastData->cacheStorageIdentifier);
+
+            if (!$this->wfLastData->hasReturnContentWithoutResponse) {
+                list($this->wfLastData->fileGetContents, $this->wfLastData->mimeType, $this->wfLastData->size, $this->wfLastData->date) = [
+                    $cacheContent,
+                    $this->media->getMimeType(),
+                    $this->media->getSize(),
+                    $this->media->getCreatedAt(),
+                ];
+
+                return $this;
+            }
 
             list($this->wfLastData->fileGetContents, $this->wfLastData->mimeType, $this->wfLastData->size, $this->wfLastData->date) = [
-                $CacheContent,
-                $this->media->getMimeType(),
-                $this->media->getSize(),
+                json_encode(['response' => 'ok']),
+                'application/json',
+                0,
                 $this->media->getCreatedAt(),
             ];
         }

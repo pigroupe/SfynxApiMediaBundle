@@ -16,7 +16,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager\Event\MediaEvent;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Manager\Event\MediaEvents;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Mapper\StorageMapperInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\MetadataExtractorInterface;
-use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\MediaTransformerInterface;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\Interfaces\MediaTransformerInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\NoMatchedStorageMapperException;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\NoMatchedTransformerException;
