@@ -96,6 +96,11 @@ class OBSetParameters extends AbstractObserver
      */
     protected function getCachedImageSourcePath(string $reference, array $options, bool $fromStorage = false)
     {
+        foreach (['noresponse', 'cacheStorageProvider', 'cacheDirectory'] as $item) {
+            if (!empty($options[$item])) {
+                unset($options[$item]);
+            }
+        }
         $imageCacheName = sprintf('%s_%s.%s',
             $reference,
             sprintf("%u", crc32(serialize($options))),
