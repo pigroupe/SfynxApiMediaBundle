@@ -38,6 +38,7 @@ class CreateOneController
         $response = new Response();
         try {
             $media = $this->manager->addMedia([
+                'enabled'          => $request->request->get('enabled'),
                 'media'            => $request->files->get('media'),
                 'source'           => $request->request->get('source', null),
                 'ip_source'        => $request->getClientIp(),
@@ -45,6 +46,7 @@ class CreateOneController
                 'description'      => $request->request->get('description', null),
                 'storage_provider' => $request->request->get('storage_provider', null),
                 'metadata'         => $request->request->get('metadata', []),
+                'signing'          => $request->request->get('signing', []),
             ]);
 
             $response->setStatusCode(Response::HTTP_CREATED);

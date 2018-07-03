@@ -24,6 +24,10 @@ class DefaultResolver extends AbstractResolver
         'format' => self::FORMATS,
         'cacheStorageProvider' => '',
         'cacheDirectory' => '/tmp',
+        'maxAge' => null,
+        'sharedMaxAge' => null,
+        'noresponse' => false,
+        'signingKey' => null,
     ];
 
     /**
@@ -32,6 +36,27 @@ class DefaultResolver extends AbstractResolver
     protected $required = [
         'storage_key',
         'format',
-        'cacheDirectory',
+        'cacheDirectory'
     ];
+
+    /**
+     * @param array $options
+     * @return void
+     */
+    protected function setOptions(array $options = []): void
+    {
+        foreach (['maxAge', 'sharedMaxAge'] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data];
+            }
+        }
+
+        foreach (['noresponse'] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data] ? true : false;
+            }
+        }
+
+        $this->options = (null !== $options) ? $options : [];
+    }
 }

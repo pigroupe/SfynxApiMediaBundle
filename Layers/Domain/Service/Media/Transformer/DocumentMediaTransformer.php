@@ -8,6 +8,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\AbstractMediaTransformer;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBDecodeSigningKey;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetDefaultResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler\CommandHandler;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\DocumentResolver;
@@ -37,6 +38,7 @@ class DocumentMediaTransformer extends AbstractMediaTransformer
 
         // 2. Implement the command workflow
         $workflowCommand = (new CommandWorkflow())
+//            ->attach(new OBDecodeSigningKey($media, $this->tokenService, $this->request))
             ->attach(new OBSetDefaultResponseMedia($media, $storageProvider))
         ;
 

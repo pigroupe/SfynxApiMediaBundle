@@ -102,6 +102,12 @@ class Media
     protected $metadata;
 
     /**
+     * @var array
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $signing;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime")
      */
@@ -150,7 +156,7 @@ class Media
      */
     public function toArray()
     {
-        return array(
+        return [
             'id'                  => $this->getId(),
             'source'              => $this->getSource(),
             'ipSource'            => $this->getIpSource(),
@@ -164,7 +170,8 @@ class Media
             'enabled'             => $this->getEnabled(),
             'createdAt'           => $this->getCreatedAt()->format('c'),
             'metadata'            => $this->getMetadata(),
-        );
+            'signing'             => $this->getSigning(),
+        ];
     }
 
     /**
@@ -181,7 +188,7 @@ class Media
      * Set source
      *
      * @param string $source
-     * @return Media
+     * @return $this
      */
     public function setSource($source): Media
     {
@@ -203,7 +210,7 @@ class Media
      * Set ip source
      *
      * @param string $ipSource
-     * @return Media
+     * @return $this
      */
     public function setIpSource($ipSource): Media
     {
@@ -225,7 +232,7 @@ class Media
      * Set reference
      *
      * @param string $reference
-     * @return Media
+     * @return $this
      */
     public function setReference($reference): Media
     {
@@ -247,7 +254,7 @@ class Media
      * Set reference prefix
      *
      * @param string $referencePrefix
-     * @return Media
+     * @return $this
      */
     public function setReferencePrefix($referencePrefix): Media
     {
@@ -269,7 +276,7 @@ class Media
      * Set extension
      *
      * @param string $extension
-     * @return Media
+     * @return $this
      */
     public function setExtension($extension): Media
     {
@@ -291,7 +298,7 @@ class Media
      * Set providerServiceName
      *
      * @param string $providerServiceName
-     * @return Media
+     * @return $this
      */
     public function setProviderServiceName($providerServiceName): Media
     {
@@ -313,7 +320,7 @@ class Media
      * Set name
      *
      * @param string $name
-     * @return Media
+     * @return $this
      */
     public function setName($name): Media
     {
@@ -335,7 +342,7 @@ class Media
      * Set description
      *
      * @param string $description
-     * @return Media
+     * @return $this
      */
     public function setDescription($description): Media
     {
@@ -357,7 +364,7 @@ class Media
      * Set size
      *
      * @param integer $size
-     * @return Media
+     * @return $this
      */
     public function setSize($size): Media
     {
@@ -379,7 +386,7 @@ class Media
      * Set mimeType
      *
      * @param string $mimeType
-     * @return Media
+     * @return $this
      */
     public function setMimeType($mimeType): Media
     {
@@ -401,7 +408,7 @@ class Media
      * Set enabled
      *
      * @param boolean $enabled
-     * @return Media
+     * @return $this
      */
     public function setEnabled($enabled): Media
     {
@@ -423,9 +430,9 @@ class Media
      * Set metadata
      *
      * @param array $metadata
-     * @return Media
+     * @return $this
      */
-    public function setMetadata($metadata): Media
+    public function setMetadata(array $metadata): Media
     {
         $this->metadata = $metadata;
         return $this;
@@ -446,10 +453,36 @@ class Media
     }
 
     /**
+     * Set signing
+     *
+     * @param array signing
+     * @return $this
+     */
+    public function setSigning(array $signing): Media
+    {
+        $this->signing = $signing;
+        return $this;
+    }
+
+    /**
+     * Get signing
+     *
+     * @param string $key
+     * @return array
+     */
+    public function getSigning($key = null)
+    {
+        if (null === $key) {
+            return $this->signing;
+        }
+        return (isset($this->signing[$key]) ? $this->signing[$key] : null);
+    }
+
+    /**
      * Set createdAt
      *
      * @param \DateTime $createdAt
-     * @return Media
+     * @return $this
      */
     public function setCreatedAt($createdAt): Media
     {
@@ -471,7 +504,7 @@ class Media
      * Set uploaded file.
      *
      * @param UploadedFile $uploadedFile
-     * @return Media
+     * @return $this
      */
     public function setUploadedFile(UploadedFile $uploadedFile): Media
     {

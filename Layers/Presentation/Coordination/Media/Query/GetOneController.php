@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Exception\InvalidOptionsException;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Generalisation\Interfaces\MediaManagerInterface;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotFoundException;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\NoMatchedTransformerException;
+use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotAuthorisationException;
 
 /**
  * Class GetOneController
@@ -87,6 +88,10 @@ class GetOneController
             $response->headers->set('Content-Type', 'text/html');
         } catch (NoMatchedTransformerException $e) {
             $response->setStatusCode(Response::HTTP_NOT_FOUND);
+            $response->setContent($e->getMessage());
+            $response->headers->set('Content-Type', 'text/html');
+        } catch (MediaNotAuthorisationException $e) {
+            $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
             $response->setContent($e->getMessage());
             $response->headers->set('Content-Type', 'text/html');
         } catch (\Exception $e) {

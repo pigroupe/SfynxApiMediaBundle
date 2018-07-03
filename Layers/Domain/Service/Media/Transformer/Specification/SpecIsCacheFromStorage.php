@@ -24,14 +24,12 @@ class SpecIsCacheFromStorage extends AbstractSpecification
      */
     public function isSatisfiedBy(stdClass $object): bool
     {
-        return isset($object->options['cacheStorageProvider'])
-            && !empty($object->options['cacheStorageProvider'])
+        return !empty($object->options['cacheStorageProvider'])
             && $object->options['cacheStorageProvider'] instanceof FilesystemInterface;
     }
 
     /**
      * @param array $options
-     * @param Media $media
      * @return \StdClass
      */
     public static function setObject($options)

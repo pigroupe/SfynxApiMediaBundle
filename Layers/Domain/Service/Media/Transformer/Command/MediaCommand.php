@@ -36,4 +36,6 @@ class MediaCommand extends DefaultCommand
     protected $sharedMaxAge;
     /** @var int */
     protected $maxAge;
+    /** @var string */
+    protected $signingKey;
 }

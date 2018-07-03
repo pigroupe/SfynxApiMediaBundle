@@ -27,8 +27,9 @@ class SpecIsGetOriginalContent extends AbstractSpecification
     }
 
     /**
-     * @param array $options
-     * @param Media $media
+     * @param mixed $format
+     * @param mixed $extension
+     * @param mixed $countOption
      * @return \StdClass
      */
     public static function setObject($format, $extension, $countOption)

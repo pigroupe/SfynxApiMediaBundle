@@ -28,8 +28,7 @@ class SpecIsCacheLocale extends AbstractSpecification
     }
 
     /**
-     * @param array $options
-     * @param Media $media
+     * @param mixed $sourcePath
      * @return \StdClass
      */
     public static function setObject($sourcePath)

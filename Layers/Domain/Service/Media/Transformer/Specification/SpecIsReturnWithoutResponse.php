@@ -7,23 +7,15 @@ use Gaufrette\FilesystemInterface;
 use Sfynx\SpecificationBundle\Specification\AbstractSpecification;
 
 /**
- * Class SpecIsCacheStorage
+ * Class SpecIsReturnWithoutResponse
  *
  * @category Sfynx\ApiMediaBundle\Layers
  * @package Domain
  * @subpackage Service\Media\Transformer\Specification
  * @author     Etienne de Longeaux <etienne.delongeaux@gmail.com>
  */
-class SpecIsCacheStorage extends AbstractSpecification
+class SpecIsReturnWithoutResponse extends AbstractSpecification
 {
-    /** @var FilesystemInterface */
-    protected $providerService;
-
-    public function __construct(FilesystemInterface $ProviderService)
-    {
-        $this->providerService = $ProviderService;
-    }
-
     /**
      * return true if the command is validated
      *
@@ -32,17 +24,17 @@ class SpecIsCacheStorage extends AbstractSpecification
      */
     public function isSatisfiedBy(stdClass $object): bool
     {
-        return $this->providerService->has($object->storageIdentifier);
+        return property_exists($object->wfCommand, 'noresponse') && (1 == $object->wfCommand->noresponse);
     }
 
     /**
-     * @param mixed $storageIdentifier
+     * @param mixed $wfCommand
      * @return \StdClass
      */
-    public static function setObject($storageIdentifier)
+    public static function setObject($wfCommand)
     {
         $object = new \StdClass();
-        $object->storageIdentifier = $storageIdentifier;
+        $object->wfCommand = $wfCommand;
 
         return $object;
     }

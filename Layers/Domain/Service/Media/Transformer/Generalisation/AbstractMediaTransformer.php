@@ -7,18 +7,28 @@ use Gaufrette\FilesystemInterface;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\Interfaces\MediaTransformerInterface;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Token\TokenService;
+use Sfynx\CoreBundle\Layers\Domain\Service\Request\Generalisation\RequestInterface;
 
 abstract class AbstractMediaTransformer implements MediaTransformerInterface
 {
     /** @var string */
     protected $cacheDirectory;
+    /** @var TokenService */
+    protected $tokenService;
+    /** @var RequestInterface */
+    protected $request;
 
     /**
      * @param string $cacheDirectory
+     * @param TokenService $tokenService
+     * @param RequestInterface $request
      */
-    public function __construct(string $cacheDirectory)
+    public function __construct(string $cacheDirectory, TokenService $tokenService, RequestInterface $request)
     {
         $this->cacheDirectory = $cacheDirectory;
+        $this->tokenService = $tokenService;
+        $this->request = $request;
     }
 
     /**
@@ -45,34 +55,11 @@ abstract class AbstractMediaTransformer implements MediaTransformerInterface
         return in_array(strtolower($format), $this->getAvailableFormats());
     }
 
-//    /**
-//     * Set default options
-//     *
-//     * @param OptionsResolver
-//     */
-//    protected function setDefaultOptions(OptionsResolver $resolver)
-//    {
-//        $resolver->setRequired([
-//            'storage_key',
-//            'format'
-//        ]);
-//        $resolver->setDefaults([
-//            'format' => $this->getAvailableFormats(),
-//            'cacheStorageProvider' => ''
-//        ]);
-//    }
-
     /**
      * {@inheritdoc}
      */
     public function transform(FilesystemInterface $storageProvider, Media $media, array $options = [])
     {
-//        $resolver = new OptionsResolver();
-//        $this->setDefaultOptions($resolver);
-//        $options = $resolver->resolve($options);
-
-//        dump($options);exit;
-
         $options['cacheDirectory'] = $this->cacheDirectory;
 
         $responseMedia = $this
