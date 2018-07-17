@@ -46,15 +46,11 @@ class TokenService
     protected $defaults = [
         'unique' => false,
         'ipRange' => [],
-        'users' => [],
-        'medias' => [],
+        'user' => [],
+        'media' => [],
         'start' => 0,
         'expire' => 3600,
         'algorithm' => self::ALGORITHM,
-        'tenantId' => '',
-        'kid' => null,
-        'url' => null,
-        'method' => 'POST'
     ];
 
     /**
@@ -63,15 +59,12 @@ class TokenService
     protected $defined = [
         'unique',
         'ipRange',
-        'users',
-        'medias',
+        'user',
+        'media',
         'start',
         'expire',
         'algorithm',
-        'tenantId',
         'kid',
-        'url',
-        'method'
     ];
 
     /**
@@ -80,12 +73,12 @@ class TokenService
     protected $required = [
         'unique',
         'ipRange',
-        'users',
-        'medias',
+        'user',
+        'media',
         'start',
         'expire',
         'algorithm',
-        'tenantId'
+        'kid',
     ];
 
     /**
@@ -94,15 +87,12 @@ class TokenService
     protected $allowedTypes = [
         'unique' => ['bool'],
         'ipRange' => ['array', 'null'],
-        'users' => ['array', 'null'],
-        'medias' => ['array', 'null'],
+        'user' => ['array', 'null'],
+        'media' => ['array', 'null'],
         'start' => ['int'],
         'expire' => ['int'],
         'algorithm' => ['string', 'null'],
-        'tenantId' => ['string'],
         'kid' => ['string', 'null'],
-        'url' => ['string', 'null'],
-        'method' => ['string']
     ];
 
     /**
@@ -128,14 +118,47 @@ class TokenService
     }
 
     /**
+     * Decode jwt token with private key
+     *
+     * @param string $token
+     * @return array Retunr the playLoad
+     */
+    public function decode(string $token): array
+    {
+        return $this->jwtEncoder->decode($token);
+    }
+
+    /**
+     * Get signing_excludes_pattern values from configuration bundle
+     *
+     * @return mixed
+     */
+    public function getParamGivingPermission()
+    {
+        return $this->options['signing_excludes_pattern'];
+    }
+
+    /**
+     * Create jwt token with public key.
+     *
      * @param array $options
      * @return JwtCommand
      */
     public function setSigningKey(array $options): JwtCommand
     {
+        foreach (['unique'] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data] ? true : false;
+            }
+        }
+        foreach (['start', 'expire'] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data];
+            }
+        }
         $parameters = $this->resolve($options);
 
-        if (null === $parameters->kid) {
+        if (empty($parameters->kid)) {
             $parameters->kid = \hash('sha256', \random_bytes(36));
         }
 
@@ -154,7 +177,7 @@ class TokenService
      */
     protected function resolve(array $options): stdClass
     {
-        $options = \array_merge($this->options, $options);
+        $options = \array_merge($this->options['token'], $options);
 
         $this->resolver = new OptionsResolver();
         $this->resolver->setDefaults($this->defaults);
@@ -168,6 +191,8 @@ class TokenService
     }
 
     /**
+     * Set body of the jwt token.
+     *
      * @param stdClass $parameters
      * @return array
      */
@@ -183,9 +208,8 @@ class TokenService
                 ],
                 'rangeip' => $parameters->ipRange,
                 'unique' => $parameters->unique,
-                'x-tenant-id' => $parameters->tenantId,
-                'users' => $parameters->users,
-                'medias' => $parameters->medias
+                'user' => $parameters->user,
+                'media' => $parameters->media
             ]
         ];
     }

@@ -1,5 +1,25 @@
+parameters:
+    sfynx_api_media.securing.signed.urls.class: Sfynx\ApiMediaBundle\Layers\Domain\Service\Token\TokenService
+    sfynx_api_media.securing.signed.urls.param:
+        token: '%sfynx.apimedia.token%'
+        signing_excludes_pattern: '%sfynx.apimedia.media.signing_excludes_pattern%'
+
 services:
+    #
     # azure driver connector
+    #
     sfynx_api_media.azure_blob_proxy_factory:
         class: 'Gaufrette\Adapter\AzureBlobStorage\BlobProxyFactory'
         arguments: ['%sfynx.apimedia.blob_storage.connection_string%']
+
+    #
+    # configuration of the JWT services
+    #
+    sfynx_api_media.securing.signed.urls:
+        class: '%sfynx_api_media.securing.signed.urls.class%'
+        arguments:
+           - "@lexik_jwt_authentication.encoder.default"
+           - "@lexik_jwt_authentication.key_loader.raw"
+           - '@sfynx.core.request.strategy'
+           - '@security.token_storage'
+           - '%sfynx_api_media.securing.signed.urls.param%'

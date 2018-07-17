@@ -18,14 +18,18 @@ class CreateOneController
 {
     /** @var MediaManagerInterface */
     protected $manager;
+    /** @var int */
+    protected $quality;
 
     /**
      * CreateOneController constructor.
      * @param MediaManagerInterface $manager
+     * @param int $quality
      */
-    public function __construct(MediaManagerInterface $manager)
+    public function __construct(MediaManagerInterface $manager, int $quality = 95)
     {
         $this->manager = $manager;
+        $this->quality = $quality;
     }
 
     /**
@@ -36,15 +40,17 @@ class CreateOneController
     public function execute(Request $request)
     {
         $response = new Response();
+
         try {
             $media = $this->manager->addMedia([
-                'enabled'          => $request->request->get('enabled'),
-                'media'            => $request->files->get('media'),
-                'source'           => $request->request->get('source', null),
+                'enabled'          => $request->request->get('enabled', null),
                 'ip_source'        => $request->getClientIp(),
                 'name'             => $request->request->get('name', null),
                 'description'      => $request->request->get('description', null),
                 'storage_provider' => $request->request->get('storage_provider', null),
+                'source'           => $request->request->get('source', null),
+                'media'            => $request->files->get('media'),
+                'quality'          => $request->request->get('quality', $this->quality),
                 'metadata'         => $request->request->get('metadata', []),
                 'signing'          => $request->request->get('signing', []),
             ]);

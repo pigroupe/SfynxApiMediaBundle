@@ -56,4 +56,32 @@ class MediaResolver extends DefaultResolver
         'format',
         'cacheDirectory',
     ];
+
+    /**
+     * @param array $options
+     * @return void
+     */
+    protected function setOptions(array $options = []): void
+    {
+        foreach ([
+                     'resize',
+                     'scale',
+                     'grayscale',
+                     'rotate',
+                     'width',
+                     'height',
+                     'maxwidth',
+                     'maxheight',
+                     'minwidth',
+                     'minheight',
+                     'maxAge',
+                     'sharedMaxAge',
+                 ] as $data) {
+            if (isset($options[$data])) {
+                $options[$data] = (int)$options[$data];
+            }
+        }
+
+        $this->options = (null !== $options) ? $options : [];
+    }
 }

@@ -1,0 +1,26 @@
+#
+# COMMAND ROUTES
+#
+sfynx_api_media_presentation_media_create_jwt_token:
+    path: /token
+    defaults: { _controller: doc_api_controller_create_jwt_token:execute }
+    methods: POST
+
+sfynx_api_media_presentation_media_create_one:
+    path: /media
+    defaults: { _controller: doc_api_controller_create_one:execute }
+    methods: POST
+
+sfynx_api_media_presentation_media_update_one:
+    path: /media/{reference}
+    defaults: { _controller: doc_api_controller_update_one:execute }
+    methods: PUT
+    requirements:
+        reference: '[-\w]+'
+
+sfynx_api_media_presentation_media_delete_one:
+    path: /media/{reference}
+    defaults: { _controller: doc_api_controller_delete_one:execute }
+    methods: DELETE
+    requirements:
+        reference: '[-\w]+'

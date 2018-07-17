@@ -1,4 +1,7 @@
 #SfynxApiMediaBundle:Media
-sfynx_api_media_media:
-    resource: "@SfynxApiMediaBundle/Resources/config/routing/media.yml"
+sfynx_api_media_media_command:
+    resource: "@SfynxApiMediaBundle/Resources/config/routing/media_command.yml"
+    prefix: /
+sfynx_api_media_media_query:
+    resource: "@SfynxApiMediaBundle/Resources/config/routing/media_query.yml"
     prefix: /

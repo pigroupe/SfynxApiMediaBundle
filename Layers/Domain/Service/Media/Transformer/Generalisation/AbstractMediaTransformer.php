@@ -18,17 +18,21 @@ abstract class AbstractMediaTransformer implements MediaTransformerInterface
     protected $tokenService;
     /** @var RequestInterface */
     protected $request;
+    /** @var array */
+    protected $extensions;
 
     /**
      * @param string $cacheDirectory
      * @param TokenService $tokenService
      * @param RequestInterface $request
+     * @param array $extensions
      */
-    public function __construct(string $cacheDirectory, TokenService $tokenService, RequestInterface $request)
+    public function __construct(string $cacheDirectory, TokenService $tokenService, RequestInterface $request, array $extensions = [])
     {
         $this->cacheDirectory = $cacheDirectory;
         $this->tokenService = $tokenService;
         $this->request = $request;
+        $this->extensions = $extensions;
     }
 
     /**

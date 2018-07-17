@@ -26,7 +26,8 @@ class SfynxApiMediaExtension extends Extension
         $loader->load('service/services_extractor.yml');
         $loader->load('service/services_transformer.yml');
         $loader->load('repository/media.yml');
-        $loader->load('controller/controller_media.yml');
+        $loader->load('controller/controller_media_query.yml');
+        $loader->load('controller/controller_media_command.yml');
 
         $container->setParameter('sfynx_api_media.configuration', $config);
         $container->setParameter('sfynx_api_media.cache_directory', $config['cache_directory']);
@@ -56,6 +57,37 @@ class SfynxApiMediaExtension extends Extension
         }
         if (isset($config['mapping']['media_entitymanager'])) {
             $container->setParameter('sfynx.apimedia.media.entitymanager', $config['mapping']['media_entitymanager']);
+        }
+
+        /**
+         * Signing Exclude patterns config parameter
+         */
+        if (isset($config['signing_excludes_pattern'])) {
+            $container->setParameter('sfynx.apimedia.media.signing_excludes_pattern', $config['signing_excludes_pattern']);
+        }
+
+        /**
+         * Media config parameter
+         */
+        if (isset($config['media'])) {
+            if (isset($config['media']['quality'])) {
+                $container->setParameter('sfynx.apimedia.quality', $config['media']['quality']);
+            }
+            if (isset($config['media']['token'])) {
+                $container->setParameter('sfynx.apimedia.token', $config['media']['token']);
+            }
+        }
+
+        /**
+         * Extension config parameter
+         */
+        if (isset($config['authorized_extensions'])) {
+            if (isset($config['authorized_extensions']['image'])) {
+                $container->setParameter('sfynx.apimedia.authorized_extensions.image', $config['authorized_extensions']['image']);
+            }
+            if (isset($config['authorized_extensions']['document'])) {
+                $container->setParameter('sfynx.apimedia.authorized_extensions.document', $config['authorized_extensions']['document']);
+            }
         }
     }
 }

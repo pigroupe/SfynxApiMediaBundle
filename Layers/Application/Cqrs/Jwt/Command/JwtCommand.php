@@ -18,6 +18,7 @@ class JwtCommand
 
     /**
      * JwtToken constructor.
+     *
      * @param string $kid Unique signing-key identifier.
      * @param string $token Encoded token string containing all information.
      */
@@ -29,6 +30,7 @@ class JwtCommand
 
     /**
      * Get the unique signing-key identifier.
+     *
      * @return string
      */
     public function getKid(): string
@@ -38,10 +40,24 @@ class JwtCommand
 
     /**
      * Get the token string.
+     *
      * @return string
      */
     public function getToken(): string
     {
         return $this->token;
+    }
+
+    /**
+     * Get values in json format.
+     *
+     * @return string
+     */
+    public function toJson(): string
+    {
+        return json_encode([
+            'kid' => $this->kid,
+            'token' => $this->token,
+        ]);
     }
 }

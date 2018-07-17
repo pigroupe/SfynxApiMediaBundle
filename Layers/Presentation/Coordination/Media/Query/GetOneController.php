@@ -44,21 +44,19 @@ class GetOneController
     public function execute(Request $request, $reference, $_format)
     {
         $response = new Response();
+
         try {
             $media = $this->manager->retrieveMedia($reference);
             try {
                 $responseMedia = $this->manager->transform($media,
-                    array_merge(
-                        $request->query->all(),
-                        [
+                    array_merge($request->query->all(), [
                             'format' => $_format,
                             'cacheStorageProvider' => $this->cacheStorageProvider
                         ]
                     )
                 );
             } catch (InvalidOptionsException $e) {
-                $responseMedia = $this->manager->transform($media,
-                    [
+                $responseMedia = $this->manager->transform($media, [
                         'format' => $_format,
                         'cacheStorageProvider' => $this->cacheStorageProvider
                     ]
@@ -66,12 +64,12 @@ class GetOneController
             }
 
             $response
-                ->setPublic()
-                ->setStatusCode(Response::HTTP_OK)
-                ->setETag($responseMedia->getETag())
-                ->setLastModified($responseMedia->getLastModifiedAt())
-                ->setContent($responseMedia->getContent())
-            ;
+            ->setPublic()
+            ->setStatusCode(Response::HTTP_OK)
+            ->setETag($responseMedia->getETag())
+            ->setLastModified($responseMedia->getLastModifiedAt())
+            ->setContent($responseMedia->getContent());
+            
             (null !== $responseMedia->getMaxAge()) ? $response->setMaxAge($responseMedia->getMaxAge()): false;
             (null !== $responseMedia->getSharedMaxAge()) ? $response->setSharedMaxAge($responseMedia->getSharedMaxAge()): false;
 

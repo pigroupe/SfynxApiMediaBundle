@@ -25,6 +25,9 @@ class Configuration implements ConfigurationInterface
         // more information on that topic.
         $this->addBlobStorage($rootNode);
         $this->addStorageProviders($rootNode);
+        $this->addExcludeSigningPattern($rootNode);
+        $this->addMediaConfig($rootNode);
+        $this->addExtensionConfig($rootNode);
         $this->addMapping($rootNode);
 
         $rootNode
@@ -93,6 +96,97 @@ class Configuration implements ConfigurationInterface
             ->end()
         ->end()
         ;
+    }
+
+    /**
+     * Exclude Signing Pattern config
+     *
+     * @param $rootNode \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition
+     *
+     * @return void
+     * @access protected
+     *
+     * @author Etienne de Longeaux <etienne.delongeaux@gmail.com>
+     */
+    protected function addExcludeSigningPattern(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+        ->children()
+            ->arrayNode('signing_excludes_pattern')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('resize')->end()
+                        ->scalarNode('scale')->end()
+                        ->scalarNode('grayscale')->end()
+                        ->scalarNode('rotate')->end()
+                        ->scalarNode('width')->end()
+                        ->scalarNode('height')->end()
+                        ->scalarNode('maxwidth')->end()
+                        ->scalarNode('maxheight')->end()
+                        ->scalarNode('minwidth')->end()
+                        ->scalarNode('minheight')->end()
+//                        ->arrayNode('width')
+//                            ->prototype('scalar')->end()
+//                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()
+        ;
+    }
+
+    /**
+     * Media config
+     *
+     * @param $rootNode ArrayNodeDefinition Class
+     *
+     * @return void
+     * @access protected
+     * @author Etienne de Longeaux <etienne.delongeaux@gmail.com>
+     */
+    protected function addMediaConfig(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+        ->children()
+            ->arrayNode('media')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->integerNode('quality')->defaultValue(95)->end()
+                    ->arrayNode('token')
+                        ->addDefaultsIfNotSet()
+                        ->children()
+                            ->integerNode('start')->defaultValue(0)->end()
+                            ->integerNode('expire')->defaultValue(3600)->end()
+                            ->booleanNode('unique')->defaultValue(false)->end()
+                            ->arrayNode('ipRange')->prototype('scalar')->end()->defaultValue([])->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
+    }
+
+    /**
+     * Extension config
+     *
+     * @param $rootNode ArrayNodeDefinition Class
+     *
+     * @return void
+     * @access protected
+     * @author Etienne de Longeaux <etienne.delongeaux@gmail.com>
+     */
+    protected function addExtensionConfig(ArrayNodeDefinition $rootNode)
+    {
+        $rootNode
+        ->children()
+            ->arrayNode('authorized_extensions')
+                ->addDefaultsIfNotSet()
+                ->children()
+                    ->arrayNode('image')->prototype('scalar')->end()->defaultValue(['jpeg', 'jpg', 'png', 'gif'])->end()
+                    ->arrayNode('document')->prototype('scalar')->end()->defaultValue(['json', 'xml', 'csv', 'pdf', 'doc', 'docx', 'rtf', 'xls', 'xlsx', 'xlsm', 'odt', 'txt'])->end()
+                ->end()
+            ->end()
+        ->end();
     }
 
     /**

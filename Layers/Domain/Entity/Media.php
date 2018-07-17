@@ -84,6 +84,12 @@ class Media
     protected $size;
 
     /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $quality = 95;
+
+    /**
      * @var string
      * @ORM\Column(name="mime_type", type="string", length=255)
      */
@@ -171,6 +177,7 @@ class Media
             'createdAt'           => $this->getCreatedAt()->format('c'),
             'metadata'            => $this->getMetadata(),
             'signing'             => $this->getSigning(),
+            'quality'             => $this->getQuality(),
         ];
     }
 
@@ -380,6 +387,28 @@ class Media
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * Set quality
+     *
+     * @param integer $quality
+     * @return $this
+     */
+    public function setQuality($quality): Media
+    {
+        $this->quality = $quality;
+        return $this;
+    }
+
+    /**
+     * Get quality
+     *
+     * @return integer
+     */
+    public function getQuality()
+    {
+        return $this->quality;
     }
 
     /**

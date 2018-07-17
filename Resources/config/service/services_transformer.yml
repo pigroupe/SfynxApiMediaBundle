@@ -3,35 +3,51 @@ services:
     ## Media Transformers ##
     sfynx_api_media.transformer.document:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\DocumentMediaTransformer'
-        arguments: ['%sfynx_api_media.cache_directory%']
+        arguments:
+          - '%sfynx_api_media.cache_directory%'
+          - '@sfynx_api_media.securing.signed.urls'
+          - '@sfynx.core.request.strategy'
+          - '%sfynx.apimedia.authorized_extensions.document%'
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
 
     sfynx_api_media.transformer.image:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\ImageMediaTransformer'
-        arguments: ['%sfynx_api_media.cache_directory%']
+        arguments:
+          - '%sfynx_api_media.cache_directory%'
+          - '@sfynx_api_media.securing.signed.urls'
+          - '@sfynx.core.request.strategy'
+          - '%sfynx.apimedia.authorized_extensions.image%'
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
 
     sfynx_api_media.transformer.rest:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\RestMediaTransformer'
-        arguments: ['%sfynx_api_media.cache_directory%']
+        arguments:
+          - '%sfynx_api_media.cache_directory%'
+          - '@sfynx_api_media.securing.signed.urls'
+          - '@sfynx.core.request.strategy'
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
 
     sfynx_api_media.transformer.svg:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\SvgMediaTransformer'
-        arguments: ['%sfynx_api_media.cache_directory%']
+        arguments:
+          - '%sfynx_api_media.cache_directory%'
+          - '@sfynx_api_media.securing.signed.urls'
+          - '@sfynx.core.request.strategy'
         public: false
         tags:
             - { name: sfynx_api_media.transformer }
 
 #    sfynx_api_media.transformer.unica:
 #        class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\UnicaMediaTransformer'
-#        arguments: ['%sfynx_api_media.cache_directory%', '%knp_gaufrette.adapters.gallery.local.directory%']
+#        arguments:
+#          - '%sfynx_api_media.cache_directory%'
+#          - '%knp_gaufrette.adapters.gallery.local.directory%'
 #        public: false
 #        tags:
 #            - { name: sfynx_api_media.transformer }
@@ -39,7 +55,10 @@ services:
     # Keep the default transformer in last position
     sfynx_api_media.transformer.default:
         class: 'Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\DefaultMediaTransformer'
-        arguments: ['%sfynx_api_media.cache_directory%']
+        arguments:
+          - '%sfynx_api_media.cache_directory%'
+          - '@sfynx_api_media.securing.signed.urls'
+          - '@sfynx.core.request.strategy'
         public: false
         tags:
             - { name: sfynx_api_media.transformer }

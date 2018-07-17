@@ -30,6 +30,17 @@ class OBSetParameters extends AbstractObserver
     /** @var Media  */
     protected $media;
 
+    const excludeList = [
+        'noresponse',
+        'cacheStorageProvider',
+        'cacheDirectory',
+        'maxAge',
+        'sharedMaxAge',
+        'signingKey',
+        'format',
+        'storage_key',
+    ];
+
     /**
      * OBSetParameters constructor.
      * @param Media $media
@@ -95,7 +106,7 @@ class OBSetParameters extends AbstractObserver
      */
     protected function getCachedImageSourcePath(string $reference, array $options, bool $fromStorage = false)
     {
-        foreach (['noresponse', 'cacheStorageProvider', 'cacheDirectory'] as $item) {
+        foreach (self::excludeList as $item) {
             if (!empty($options[$item])) {
                 unset($options[$item]);
             }

@@ -26,7 +26,7 @@ use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaAlreadyExistExcept
 
 use Sfynx\CoreBundle\Layers\Domain\Service\Manager\Generalisation\Interfaces\ManagerInterface;
 use Sfynx\CoreBundle\Layers\Domain\Service\Manager\Generalisation\AbstractManager;
-use Sfynx\CoreBundle\Layers\Infrastructure\Persistence\Factory\Generalisation\AdapterFactoryInterface;
+use Sfynx\CoreBundle\Layers\Infrastructure\Persistence\Factory\Generalisation\Interfaces\AdapterFactoryInterface;
 
 /**
  * Media manager.
@@ -70,6 +70,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         'mime_type'          => null,
         'processing_file'    => null,
         'size'               => null,
+        'quality'            => null,
         'source'             => null,
         'reference'          => null,
         'reference_prefix'   => null,
@@ -80,6 +81,8 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
      */
     protected $required = [
         'api_public_endpoint',
+        'signing_excludes_pattern',
+        'authorized_extensions',
         'cache_directory',
         'media',
         'working_directory',
@@ -91,7 +94,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
      * @var array[] $allowedTypes List of allowed types for each methods.
      */
     protected $allowedTypes = [
-        'enabled'             => ['bool'],
+        'enabled'             => ['null', 'string'],
         'mapping'             => array('null', 'array'),
         'storage_providers'   => array('null', 'array'),
         'storage_provider'    => array('string'),
@@ -109,6 +112,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         'mime_type'           => array('null', 'string'),
         'processing_file'     => array('null', 'Symfony\Component\HttpFoundation\File\File'),
         'size'                => array('null', 'integer'),
+        'quality'             => array('null', 'string'),
         'source'              => array('null', 'string'),
         'reference'           => array('null', 'string'),
         'reference_prefix'    => array('null', 'string'),
@@ -165,6 +169,9 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
 
                 return $decoded;
             },
+            'enabled' => function (Options $options, $value) {
+                return (int)$value ? true : false;
+            },
             'mime_type' => function (Options $options, $value) {
                 return $options['media']->getClientMimeType();
             },
@@ -176,6 +183,9 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
             },
             'size' => function (Options $options, $value) {
                 return $options['processing_file']->getSize();
+            },
+            'quality' => function (Options $options, $value) {
+                return (int)$value;
             },
             'reference' => function (Options $options, $value) {
                 $now = new \DateTime();
@@ -435,6 +445,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
             ->setMimeType($resolvedParameters['mime_type'])
             ->setEnabled($resolvedParameters['enabled'])
             ->setSigning($resolvedParameters['signing'])
+            ->setQuality($resolvedParameters['quality'])
             ->setMetadata(\array_merge_recursive(
                 $resolvedParameters['metadata'],
                 $this
@@ -442,7 +453,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
                     ->extract($resolvedParameters['processing_file']->getRealPath())
             ))
         ;
-        $this->add($media);
+        $this->add($media, true);
 
         // Remove the media once the provider has well stored it.
         unlink($resolvedParameters['processing_file']->getRealPath());
