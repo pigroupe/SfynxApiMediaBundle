@@ -1,26 +1,4 @@
 #
-# COMMAND ROUTES
-#
-sfynx_api_media_presentation_media_create_one:
-    path: /media
-    defaults: { _controller: doc_api_controller_create_one:execute }
-    methods: POST
-
-sfynx_api_media_presentation_media_update_one:
-    path: /media/{reference}
-    defaults: { _controller: doc_api_controller_update_one:execute }
-    methods: PUT
-    requirements:
-        reference: '[-\w]+'
-
-sfynx_api_media_presentation_media_delete_one:
-    path: /media/{reference}
-    defaults: { _controller: doc_api_controller_delete_one:execute }
-    methods: DELETE
-    requirements:
-        reference: '[-\w]+'
-
-#
 # QUERY ROUTES
 #
 sfynx_api_media_presentation_media_get_one_1:
@@ -29,7 +7,7 @@ sfynx_api_media_presentation_media_get_one_1:
     methods: GET
     requirements:
         reference: '[-\w]+'
-        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt|JSON|XML|CSV|JPEG|JPG|PNG|GIF|PDF|DOC|DOCX|RTF|XLS|XLSX|ODT'
+#        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt|qpl|xslm|txt|JSON|XML|CSV|JPEG|JPG|PNG|GIF|PDF|DOC|DOCX|RTF|XLS|XLSX|ODT|QPL|XSLM|TXT|'
 
 sfynx_api_media_presentation_media_get_one_2:
     path: /media/{reference}
@@ -52,4 +30,4 @@ sfynx_api_media_presentation_media_get_endpoint:
     methods: GET
     requirements:
         reference: '[-\w]+'
-        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt|JSON|XML|CSV|JPEG|JPG|PNG|GIF|PDF|DOC|DOCX|RTF|XLS|XLSX|ODT'
+#        _format: 'json|xml|csv|jpeg|jpg|png|gif|pdf|doc|docx|rtf|xls|xlsx|odt|qpl|xslm|txt|JSON|XML|CSV|JPEG|JPG|PNG|GIF|PDF|DOC|DOCX|RTF|XLS|XLSX|ODT|QPL|XSLM|TXT|'

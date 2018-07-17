@@ -8,6 +8,7 @@ use Sfynx\CoreBundle\Layers\Domain\Workflow\Observer\Generalisation\Command\Abst
 use Sfynx\CoreBundle\Layers\Infrastructure\Exception\WorkflowException;
 use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\MediaCommand;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Specification\SpecIsReturnWithoutResponse;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Specification\SpecIsGetOriginalContent;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Specification\SpecIsCacheFromStorage;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Specification\SpecIsCacheLocale;
@@ -29,6 +30,17 @@ class OBSetParameters extends AbstractObserver
     /** @var Media  */
     protected $media;
 
+    const excludeList = [
+        'noresponse',
+        'cacheStorageProvider',
+        'cacheDirectory',
+        'maxAge',
+        'sharedMaxAge',
+        'signingKey',
+        'format',
+        'storage_key',
+    ];
+
     /**
      * OBSetParameters constructor.
      * @param Media $media
@@ -48,10 +60,8 @@ class OBSetParameters extends AbstractObserver
     {
         $options = array_filter($this->wfCommand->toArray());
 
-        $this->wfLastData->hasReturnContentWithoutResponse = false;
-        if (property_exists($this->wfCommand, 'noresponse')) {
-            $this->wfLastData->hasReturnContentWithoutResponse = $this->wfCommand->noresponse;
-        }
+        $this->wfLastData->hasReturnContentWithoutResponse = (new SpecIsReturnWithoutResponse())
+            ->isSatisfiedBy(SpecIsReturnWithoutResponse::setObject($this->wfCommand));
 
         $this->wfLastData->cachedImageSourcePath = $this->getCachedImageSourcePath(
             $this->media->getReference(),
@@ -96,7 +106,7 @@ class OBSetParameters extends AbstractObserver
      */
     protected function getCachedImageSourcePath(string $reference, array $options, bool $fromStorage = false)
     {
-        foreach (['noresponse', 'cacheStorageProvider', 'cacheDirectory'] as $item) {
+        foreach (self::excludeList as $item) {
             if (!empty($options[$item])) {
                 unset($options[$item]);
             }

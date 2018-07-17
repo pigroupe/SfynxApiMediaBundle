@@ -12,6 +12,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\Command
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\MediaCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\MediaResolver;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler\CommandHandler;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBDecodeSigningKey;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetParameters;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetResponseFromeOriginalStorage;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetResponseFromCacheStorage;
@@ -27,6 +28,9 @@ class ImageMediaTransformer extends AbstractMediaTransformer
      */
     protected function getAvailableFormats()
     {
+        if (!empty($this->extensions)) {
+            return $this->extensions;
+        }
         return MediaResolver::FORMATS;
     }
 
@@ -37,12 +41,11 @@ class ImageMediaTransformer extends AbstractMediaTransformer
     {
         // 1. Transform options to Command.
         $adapter = new CommandAdapter(new MediaCommand());
-        $command = $adapter->createCommandFromResolver(
-            new MediaResolver($options)
-        );
+        $command = $adapter->createCommandFromResolver(new MediaResolver($options));
 
         // 2. Implement the command workflow
         $workflowCommand = (new CommandWorkflow())
+            ->attach(new OBDecodeSigningKey($media, $this->tokenService, $this->request))
             ->attach(new OBSetParameters($media))
             ->attach(new OBSetResponseFromeOriginalStorage($media, $storageProvider))
             ->attach(new OBSetResponseFromCacheStorage($media, $storageProvider))

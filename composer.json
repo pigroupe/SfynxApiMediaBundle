@@ -23,6 +23,7 @@
     "doctrine/orm": "*",
     "doctrine/doctrine-bundle": "*",
     "knplabs/knp-gaufrette-bundle": "~0.4",
+    "lexik/jwt-authentication-bundle": "~2.4.1",
     "sfynx-project/tool-crawler-bundle": "~2.8.1",
     "sfynx-project/core-bundle": "^2.9.12"
   },

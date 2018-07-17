@@ -3,8 +3,6 @@ namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver;
 
 use Symfony\Component\OptionsResolver\Options;
 
-use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\Generalisation\AbstractResolver;
-
 /**
  * Class MediaResolver
  *
@@ -13,7 +11,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\Genera
  * @subpackage Request\DateList\Command
  * @author     Etienne de Longeaux <etienne.delongeaux@gmail.com>
  */
-class MediaResolver extends AbstractResolver
+class MediaResolver extends DefaultResolver
 {
     const FORMATS = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -24,9 +22,10 @@ class MediaResolver extends AbstractResolver
         'format' => self::FORMATS,
         'cacheStorageProvider' => '',
         'cacheDirectory' => '/tmp',
-        'noresponse' => false,
         'maxAge' => null,
         'sharedMaxAge' => null,
+        'noresponse' => false,
+        'signingKey' => null,
     ];
 
     /**
@@ -43,9 +42,10 @@ class MediaResolver extends AbstractResolver
         'maxheight',
         'minwidth',
         'minheight',
-        'noresponse',
         'maxAge',
         'sharedMaxAge',
+        'noresponse',
+        'signingKey',
     ];
 
     /**
@@ -63,17 +63,25 @@ class MediaResolver extends AbstractResolver
      */
     protected function setOptions(array $options = []): void
     {
-        foreach (['maxAge', 'sharedMaxAge'] as $data) {
+        foreach ([
+                     'resize',
+                     'scale',
+                     'grayscale',
+                     'rotate',
+                     'width',
+                     'height',
+                     'maxwidth',
+                     'maxheight',
+                     'minwidth',
+                     'minheight',
+                     'maxAge',
+                     'sharedMaxAge',
+                 ] as $data) {
             if (isset($options[$data])) {
                 $options[$data] = (int)$options[$data];
             }
         }
 
-        foreach (['noresponse'] as $data) {
-            if (isset($options[$data])) {
-                $options[$data] = (int)$options[$data] ? true : false;
-            }
-        }
         $this->options = (null !== $options) ? $options : [];
     }
 }

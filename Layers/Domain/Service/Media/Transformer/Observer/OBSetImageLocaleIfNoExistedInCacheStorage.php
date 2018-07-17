@@ -82,7 +82,7 @@ class OBSetImageLocaleIfNoExistedInCacheStorage extends AbstractObserver
                 }
             }
 
-            $imageMedia->quality(95)->save($this->wfLastData->cachedImageSourcePath);
+            $imageMedia->quality($this->media->getQuality())->save($this->wfLastData->cachedImageSourcePath);
 
             $this->wfLastData->hasCachedLocaleImage = true;
         }

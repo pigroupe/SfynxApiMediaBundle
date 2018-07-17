@@ -1,18 +1,16 @@
 <?php
 namespace Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer;
 
-use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Gaufrette\FilesystemInterface;
 
 use Sfynx\CoreBundle\Layers\Application\Command\Workflow\CommandWorkflow;
+use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\AbstractMediaTransformer;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetRestResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler\CommandHandler;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\RestResolver;
-
-
 use Sfynx\CrawlerBundle\Crawler\Transformer\Doctrine2OtherTransformer;
 
 class RestMediaTransformer extends AbstractMediaTransformer

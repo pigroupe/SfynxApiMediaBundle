@@ -20,4 +20,12 @@ class DefaultCommand extends AbstractCommand
     protected $cacheStorageProvider;
     /** @var string */
     protected $cacheDirectory;
+    /** @var bool */
+    protected $noresponse;
+    /** @var int */
+    protected $sharedMaxAge;
+    /** @var int */
+    protected $maxAge;
+    /** @var string */
+    protected $signingKey;
 }
