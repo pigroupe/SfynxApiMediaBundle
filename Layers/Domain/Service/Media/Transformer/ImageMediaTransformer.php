@@ -21,6 +21,15 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetR
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBCreateCacheStorageFile;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBDeleteCacheLocaleFileIfCacheStorage;
 
+/**
+ * Image Media Transformer.
+ *
+ * @category   Sfynx\ApiMediaBundle\Layers
+ * @package    Domain
+ * @subpackage Service\Media\Transformer
+ * @author     Etienne de Longeaux <etienne.delongeaux@gmail.com>
+ * @copyright  2016 PI-GROUPE
+ */
 class ImageMediaTransformer extends AbstractMediaTransformer
 {
     /**

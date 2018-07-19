@@ -35,7 +35,6 @@ class DeleteOneController
      */
     public function execute(Request $request, $reference)
     {
-        print_r('coincocin');exit;
         $response = new Response();
         try {
             $this->manager->deleteMedia($reference);

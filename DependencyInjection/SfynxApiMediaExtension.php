@@ -22,6 +22,7 @@ class SfynxApiMediaExtension extends Extension
         $config = $this->processConfiguration($configuration, $config);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('service/services_cmd.yml');
         $loader->load('service/services_media.yml');
         $loader->load('service/services_extractor.yml');
         $loader->load('service/services_transformer.yml');

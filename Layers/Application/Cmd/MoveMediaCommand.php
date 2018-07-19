@@ -1,6 +1,6 @@
 <?php
 
-namespace Sfynx\ApiMediaBundle\Layers\Command;
+namespace Sfynx\ApiMediaBundle\Layers\Application\Cmd;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;

@@ -1,0 +1,23 @@
+services:
+    #
+    # commands services
+    #
+    sfynx.sfynx_api_media.command.clean_no_file_media:
+        class: 'Sfynx\ApiMediaBundle\Layers\Application\Cmd\CleanNoFileMediaCommand'
+        tags:
+            - { name: console.command }
+
+    sfynx.sfynx_api_media.command.import_media:
+        class: 'Sfynx\ApiMediaBundle\Layers\Application\Cmd\ImportMediaCommand'
+        tags:
+            - { name: console.command }
+
+    sfynx.sfynx_api_media.command.move_media:
+        class: 'Sfynx\ApiMediaBundle\Layers\Application\Cmd\MoveMediaCommand'
+        tags:
+            - { name: console.command }
+
+    sfynx.sfynx_api_media.command.replace_media:
+        class: 'Sfynx\ApiMediaBundle\Layers\Application\Cmd\ReplaceMediaCommand'
+        tags:
+            - { name: console.command }

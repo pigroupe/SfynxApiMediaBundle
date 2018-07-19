@@ -1,5 +1,4 @@
 services:
-
     ## Metadata Extrators ##
     sfynx_api_media.metadata_extractor.image:
         class: Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\MetadataExtractor\ImageMetadataExtractor
