@@ -1,6 +1,6 @@
 <?php
 
-namespace Sfynx\ApiMediaBundle\Layers\Command;
+namespace Sfynx\ApiMediaBundle\Layers\Application\Cmd;
 
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\MediaNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

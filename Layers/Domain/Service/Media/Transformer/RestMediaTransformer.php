@@ -9,6 +9,7 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Generalisation\
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Command\DefaultCommand;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Adapter\CommandAdapter;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBSetRestResponseMedia;
+use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Observer\OBDecodeSigningKey;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Handler\CommandHandler;
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\RestResolver;
 use Sfynx\CrawlerBundle\Crawler\Transformer\Doctrine2OtherTransformer;
@@ -36,6 +37,7 @@ class RestMediaTransformer extends AbstractMediaTransformer
 
         // 2. Implement the command workflow
         $workflowCommand = (new CommandWorkflow())
+            ->attach(new OBDecodeSigningKey($media, $this->tokenService, $this->request))
             ->attach(new OBSetRestResponseMedia($media, $storageProvider))
         ;
 

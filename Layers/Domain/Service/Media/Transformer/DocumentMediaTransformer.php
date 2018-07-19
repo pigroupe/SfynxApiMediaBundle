@@ -15,6 +15,15 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\Transformer\Resolver\Docume
 use Sfynx\ApiMediaBundle\Layers\Domain\Service\Media\ResponseMedia;
 use Sfynx\ApiMediaBundle\Layers\Infrastructure\Exception\UnavailableTransformationException;
 
+/**
+ * Document Media Transformer.
+ *
+ * @category   Sfynx\ApiMediaBundle\Layers
+ * @package    Domain
+ * @subpackage Service\Media\Transformer
+ * @author     Etienne de Longeaux <etienne.delongeaux@gmail.com>
+ * @copyright  2016 PI-GROUPE
+ */
 class DocumentMediaTransformer extends AbstractMediaTransformer
 {
     /**
