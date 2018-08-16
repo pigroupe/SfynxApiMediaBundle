@@ -13,6 +13,8 @@ class MediaCommand extends DefaultCommand
     /** @var int */
     protected $resize;
     /** @var int */
+    protected $quality;
+    /** @var int */
     protected $scale;
     /** @var int */
     protected $grayscale;

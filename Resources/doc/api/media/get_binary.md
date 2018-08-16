@@ -1,30 +1,33 @@
-TmsMediaBundle API: [GET] Media
-===============================
+# API: [GET] Media
 
-Retrieve one notification
+Get binary media format
 
-## General
+## General request
+
 |             | Values
 |-------------|-------
 | **Method**  | GET
-| **Path**    | /media/{id}/{_format}.bin
-| **Formats** | json|xml|csv|jpeg|jpg|png|gif
+| **Route**   | /media/{reference}/{_format}.bin
+| **Formats** | json, xml, csv, jpeg, jpg, png, gif
 | **Secured** | true
 
 ## HTTP Request parameters
 
-[see parameters along {_format}](../media/get_media.md)
+[see parameters along {_format}](../media/get_media)
 
 ## HTTP Response codes
-| Code | Description
+
+| Code | HTTP Status Code
 |------|------------
 | 200  | Ok
+| 401  | Unauthorized
 | 404  | Not found (wrong id)
-| 500  | Server error
+| 503  | Service Unavailable
 
 ## HTTP Response content examples
 
 ### Binary
+
 ```curl
 $ curl http://your_domain/api/media/reference/png.bin?rotate=106
 ```

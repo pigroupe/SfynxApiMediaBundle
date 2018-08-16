@@ -14,24 +14,13 @@ use Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media;
 
 class ImportMediaCommand extends ContainerAwareCommand
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filePath = null;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $delimiter = null;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $enclosure = null;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $provider = null;
 
     /**
@@ -41,7 +30,7 @@ class ImportMediaCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sfynx-media:import')
-            ->setDescription('Import media')
+            ->setDescription('Import media to csv file')
             ->addArgument('filePath', InputArgument::REQUIRED, 'The file path to use')
             ->addOption('with-header', 'w', InputOption::VALUE_NONE, 'Add this option if the CSV file contains a header')
             ->addOption('delimiter', 'd', InputOption::VALUE_REQUIRED, 'The csv delimiter', ',')

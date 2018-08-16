@@ -40,7 +40,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $timeStart = microtime(true);
+        $timeStart = \microtime(true);
 
         //Restrict search to extension / handle '.' or not '.'
         $pattern = $input->getOption('extension');
@@ -60,7 +60,7 @@ EOT
             $finder->depth('<='.$input->getOption('recursive'));
         }
 
-        $fileCount = iterator_count($finder);
+        $fileCount = \iterator_count($finder);
         $imported = 0;
 
         $output->writeln(['<comment>Starting import</comment>','']);
@@ -68,10 +68,10 @@ EOT
         $progress = new ProgressBar($output, $fileCount);
         $progress->start();
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $finfo = \finfo_open(FILEINFO_MIME_TYPE);
         foreach ($finder as $file) {
             //Remove the extension from filename
-            $filename = preg_split('/\./', $file->getBasename())[0];
+            $filename = \preg_split('/\./', $file->getBasename())[0];
 
             try {
                 //Find corresponding media by reference
@@ -95,7 +95,7 @@ EOT
             $progress->advance();
         }
 
-        $timeEnd = microtime(true);
+        $timeEnd = \microtime(true);
         $progress->finish();
 
         $output->writeln(['', '', sprintf(

@@ -67,9 +67,9 @@ class OBSetImageLocaleIfNoExistedInCacheStorage extends AbstractObserver
                 }
                 $reflectionMethod = $reflectionClass->getMethod($function);
                 $parameters = $reflectionMethod->getParameters();
-                if (!count($parameters)) {
+                if (!\count($parameters)) {
                     $imageMedia->$function();
-                } elseif (count($parameters) === 1) {
+                } elseif (\count($parameters) === 1) {
                     $imageMedia->$function($argument);
                 } else {
                     $arguments = [];
@@ -78,11 +78,17 @@ class OBSetImageLocaleIfNoExistedInCacheStorage extends AbstractObserver
                             $options[$parameter->getName()] :
                             null;
                     }
-                    call_user_func_array(array($imageMedia, $function), $arguments);
+                    \call_user_func_array(array($imageMedia, $function), $arguments);
                 }
             }
 
-            $imageMedia->quality($this->media->getQuality())->save($this->wfLastData->cachedImageSourcePath);
+            $quality = $this->media->getQuality();
+            if (!empty($options['quality'])
+                && $options['quality'] <= 600
+            ) {
+                $quality = $options['quality'];
+            }
+            $imageMedia->quality($quality)->save($this->wfLastData->cachedImageSourcePath);
 
             $this->wfLastData->hasCachedLocaleImage = true;
         }

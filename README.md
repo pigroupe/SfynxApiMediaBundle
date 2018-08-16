@@ -1,31 +1,47 @@
-SfynxMediaBundle
-================
+# SfynxApiMediaBundle
 
-Symfony3's Sfynx Media Bundle.
+Symfony3/4's Sfynx Api Media Bundle provides an API to manage media from multiple storage locations
+(locale, azure, aws, etc) from KnpGaufretteBundle.
 
+The API includes :
+- permission-based media management handled by a jwt token with ssh key.
+- API to generate jwt permission token
+- image media transformation from imagick php extension
+- media cache HTTP and media cache storage
+- multiple storage locations to manage media from multiple applications
 
-Installation
-------------
+This bundle is a new version of the TmsMediaBundle (https://github.com/Tessi-Tms/TmsMediaBundle).
+We have debugged, improved the code, and added many features including media permissions management.
+
+## Documentation
+
+The source of the documentation is stored in the `Resources/doc/` folder in this bundle :
+
+* [Read the Documentation for master](https://github.com/pigroupe/SfynxApiMediaBundle/blob/master/Resources/doc/index.md)
+
+* [Read the Documentation](Resources/doc/index.md)
+
+## Installation
+
+> a) Prerequisites
+
+This version of the bundle requires `PHP 7.2+` with `imagick extension` enabled.
+
+> b) Configuration
 
 Add dependencies in your `composer.json` file:
 
 ```json
-"repositories": [
-    ...,
-    {
-        "type": "vcs",
-        "url": "https://github.com/pigroupe/TmsMediaBundle.git"
-    }
-],
 "require": {
-        ...,
-        "sfynx-project/media-api-bundle": "0.2.*@dev"
+        ...
+        "sfynx-project/media-api-bundle": "dev-master"
     },
 ```
 
 Install these new dependencies of your application:
+
 ```sh
-$ composer update
+$ composer update --no-interaction --with-dependencies
 ```
 
 Enable the bundles in your application kernel :
@@ -36,40 +52,59 @@ Enable the bundles in your application kernel :
 
 public function registerBundles()
 {
-    $bundles = array(
+    $bundles = [
         //
         new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),
-        new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
-        new Tms\Bundle\MediaBundle\TmsMediaBundle(),
-    );
+        new Sfynx\ApiMediaBundle\SfynxApiMediaBundle(),
+    ];
 }
 ```
 
-Now import the bundle configuration in your `app/config.yml`
-
-```yml
-# app/config/config.yml
-
-imports:
-    ...
-    - { resource: @TmsMediaBundle/Resources/config/config.yml }
-```
-
-Documentation
--------------
-
-[Read the Documentation](Resources/doc/index.md)
-
-
-Tests
------
-
-Install bundle dependencies:
-```sh
-$ php composer.phar update
-```
+## Tests
 
 To execute unit tests:
 ```sh
 $ phpunit --coverage-text
 ```
+
+## Reporting an issue or a feature request
+
+Issues and feature requests are tracked in the [Github issue tracker](https://github.com/pigroupe/SfynxApiMediaBundle/issues).
+
+When reporting a bug, it may be a good idea to reproduce it in a basic project
+built using the [Symfony Standard Edition](https://github.com/symfony/symfony-standard)
+to allow developers of the bundle to reproduce the issue by simply cloning it
+and following some steps.
+
+## License
+
+**Copyright © 2018, contact@pi-groupe.net.**
+**This bundle is under the [GNU Lesser General Public License](LICENSE), permitting combination and redistribution with software that uses the MIT License**
+
+SFYNX is a free software distributed under the GPL license. This license guarantees the following freedoms:
+
+```
+- the freedom to install and use SFYNX for any usage whatsoever;
+- the freedom to look into SFYNX’s code and adapt it to your own needs by modifying the source code, to which you have direct access since SFYNX is entirely developed in PHP;
+- the freedom to distribute copies of the software to anyone, provided you do not modify or delete the license;
+- the freedom to enhance SFYNX and to distribute your enhancements among the public so that the entire community may benefit from it, provided you do not modify or delete the license.
+```
+
+- This application is a free software; you can distribute it and/or modify it according to the terms of the GNU General Public License, as published by the Free Software Foundation; version 2 or (upon your choice) any later version.
+
+- This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; not even the implicit warranty for COMMERCIALISATION or CUSTOMISATION FOR A PARTICULAR PURPOSE. For more details, refer to the GNU General Public License.
+
+- A copy of the GNU General Public License must be provided with this software; if it is not, please write to the Free Software Foundation Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+- You can download this software from http://pigroupe.github.io/cmf-sfynx/; you will also find a complete user manual and additional information on this site.
+
+- In French law, SFYNX falls under the regulations stipulated in the code of intellectual property rights (CPI). The SFYNX kernel is a collaborative work by its authors, listed above as per article L 113-1 of the CPI. The entire SFYNX project is comprised of a collective work in respect of articles L 113-2 and L 113-5 of the CPI. The authors release the work to the public in accordance with the rights and obligations as defined by the GNU public license.
+
+## About
+
+SfynxApiMediaBundle is a [Project PI-GROUPE Development](https://github.com/pigroupe) initiative.
+See also the list of [contributors](https://github.com/orgs/pigroupe/people).
+
+**For more information** :
+* http://www.sfynx.fr
+* http://www.pi-groupe.net
