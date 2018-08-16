@@ -49,7 +49,7 @@ class GetOneController
             $media = $this->manager->retrieveMedia($reference);
             try {
                 $responseMedia = $this->manager->transform($media,
-                    array_merge($request->query->all(), [
+                    \array_merge($request->query->all(), [
                             'format' => $_format,
                             'cacheStorageProvider' => $this->cacheStorageProvider
                         ]

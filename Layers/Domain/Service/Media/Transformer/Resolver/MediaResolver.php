@@ -33,6 +33,7 @@ class MediaResolver extends DefaultResolver
      */
     protected $defined = [
         'resize',
+        'quality',
         'scale',
         'grayscale',
         'rotate',
@@ -64,19 +65,20 @@ class MediaResolver extends DefaultResolver
     protected function setOptions(array $options = []): void
     {
         foreach ([
-                     'resize',
-                     'scale',
-                     'grayscale',
-                     'rotate',
-                     'width',
-                     'height',
-                     'maxwidth',
-                     'maxheight',
-                     'minwidth',
-                     'minheight',
-                     'maxAge',
-                     'sharedMaxAge',
-                 ] as $data) {
+             'resize',
+             'quality',
+             'scale',
+             'grayscale',
+             'rotate',
+             'width',
+             'height',
+             'maxwidth',
+             'maxheight',
+             'minwidth',
+             'minheight',
+             'maxAge',
+             'sharedMaxAge',
+        ] as $data) {
             if (isset($options[$data])) {
                 $options[$data] = (int)$options[$data];
             }

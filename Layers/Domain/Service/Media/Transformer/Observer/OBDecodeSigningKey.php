@@ -58,7 +58,7 @@ class OBDecodeSigningKey extends AbstractObserver
      */
     protected function execute(): AbstractObserver
     {
-//        // TEST
+        // TEST
 //        $signingFromMediaRegistration = [
 //            'connected' => true,
 //            'roles' => [
@@ -73,7 +73,6 @@ class OBDecodeSigningKey extends AbstractObserver
 //                '10.255.0.2.2'
 //            ]
 //        ];
-//
 
         // if media is not enabled
         $this->assertMediaNoEnabled($this->media);
@@ -92,6 +91,9 @@ class OBDecodeSigningKey extends AbstractObserver
         // we get playload information of th jwt token.
         // Return 503 Response if the JWT has been expired
         $playload = $this->tokenService->decode($options['signingKey']);
+
+        // Return 503 response if the token media id value no match with the id media
+        $this->assertTokenWithIdMedia($this->media, $playload);
 
         // Return 503 response if there is not intersect between rangeip token and rangeip authorized by media
         $this->assertTokenWithoutRangeIp($signingFromMediaRegistration, $playload);
@@ -172,9 +174,25 @@ class OBDecodeSigningKey extends AbstractObserver
      */
     protected function assertTokenWithoutRangeIp(array $signingFromMediaRegistration, array $playload): void
     {
-        // Return 503 response if there is not intersect between rangeip token and rangeip authorized by media
         if (!empty($signingFromMediaRegistration['rangeip'])
-            && empty(array_intersect($playload['context']['rangeip'], $signingFromMediaRegistration['rangeip']))
+            && empty(\array_intersect($playload['context']['rangeip'], $signingFromMediaRegistration['rangeip']))
+        ) {
+            throw new MediaNotAuthorisationException();
+        }
+    }
+
+    /**
+     * Return 503 response if the id media value in token no match with the media identifier
+     *
+     * @param array $signingFromMediaRegistration
+     * @param array $playload
+     * @return void
+     * @throws MediaNotAuthorisationException
+     */
+    protected function assertTokenWithIdMedia(Media $media, array $playload): void
+    {
+        if (!empty($playload['context']['media']['id'])
+            && (int)$media->getMetadata()['idMedia'] !== (int)$playload['context']['media']['id']
         ) {
             throw new MediaNotAuthorisationException();
         }
@@ -191,7 +209,7 @@ class OBDecodeSigningKey extends AbstractObserver
     {
         if (!empty($playload['context']['date']['start'])) {
             $startTime = $playload['context']['date']['start'];
-            $now = time(true);
+            $now = \time(true);
             $diff = $startTime - $now;
 
             if ($diff > 0) {
@@ -201,7 +219,7 @@ class OBDecodeSigningKey extends AbstractObserver
     }
 
     /**
-     * Return 503 response if the media has been saved with an unique upload authorisation
+     * Return 503 response if the token has been created with an unique upload authorisation
      *
      * @param array $cacheKids
      * @param array $playload
@@ -210,7 +228,7 @@ class OBDecodeSigningKey extends AbstractObserver
     protected function assertTokenWithUniqueUpload(array $cacheKids, array $playload): void
     {
         if (!empty($playload['kid'])
-            && in_array($playload['kid'], $cacheKids)
+            && \in_array($playload['kid'], $cacheKids)
             && !empty($playload['context']['unique']) && $playload['context']['unique']
         ) {
             throw new MediaNotAuthorisationException();
@@ -236,18 +254,18 @@ class OBDecodeSigningKey extends AbstractObserver
                 (   // if the media has been saved with the connection constraint and user roles accepted for authorization.
                     !empty($signingFromMediaRegistration['connected']) && true == $signingFromMediaRegistration['connected']
                     && !empty($signingFromMediaRegistration['roles']) && empty($signingFromMediaRegistration['usernames'])
-                    && !empty(array_intersect($playload['context']['user']['roles'], $signingFromMediaRegistration['roles']))
+                    && !empty(\array_intersect($playload['context']['user']['roles'], $signingFromMediaRegistration['roles']))
                 ) ||
-                (   // if the media has been saved with only the connection constraint for authorization.
+                (   // if the media has been saved with the connection constraint and username inside the token is not accepted for authorization
                     !empty($signingFromMediaRegistration['connected']) && true == $signingFromMediaRegistration['connected']
                     && empty($signingFromMediaRegistration['roles']) && !empty($signingFromMediaRegistration['usernames'])
-                    && in_array($playload['context']['user']['username'], $signingFromMediaRegistration['usernames'])
+                    && \in_array($playload['context']['user']['username'], $signingFromMediaRegistration['usernames'])
                 ) ||
-                (   // if the media has been saved with the connection constraint and role and username  is not accepted for authorization
+                (   // if the media has been saved with the connection constraint and roles and username inside the token are not accepted for authorization
                     !empty($signingFromMediaRegistration['connected']) && true == $signingFromMediaRegistration['connected']
                     && !empty($signingFromMediaRegistration['roles']) && !empty($signingFromMediaRegistration['usernames'])
-                    && in_array($playload['context']['user']['username'], $signingFromMediaRegistration['usernames'])
-                    && !empty(array_intersect($playload['context']['user']['roles'], $signingFromMediaRegistration['roles']))
+                    && \in_array($playload['context']['user']['username'], $signingFromMediaRegistration['usernames'])
+                    && !empty(\array_intersect($playload['context']['user']['roles'], $signingFromMediaRegistration['roles']))
                 )
             )
         ) {

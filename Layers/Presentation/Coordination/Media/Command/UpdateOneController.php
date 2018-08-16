@@ -39,8 +39,11 @@ class UpdateOneController
         try {
             $media = $this->manager->retrieveMedia($reference);
             $media->setEnabled($request->request->get('enabled', $media->getEnabled()));
-            $media->setSigning($request->request->get('signing', []));
-            $media->setMetadata(array_merge(
+            $media->setSigning(\array_merge(
+                $media->getSigning(),
+                $request->request->get('signing', [])
+            ));
+            $media->setMetadata(\array_merge(
                 $media->getMetadata(),
                 $request->request->get('metadata', [])
             ));

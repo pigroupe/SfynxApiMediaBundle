@@ -8,7 +8,7 @@ class ImageMetadataExtractor implements MetadataExtractorInterface
      */
     public function checkMimeType($mimeType)
     {
-        return in_array($mimeType, array(
+        return \in_array($mimeType, array(
             'image/gif',
             'image/jpeg',
             'image/png',
@@ -23,9 +23,9 @@ class ImageMetadataExtractor implements MetadataExtractorInterface
      */
     public function extract($mediaPath)
     {
-        $data = getimagesize($mediaPath);
+        $data = \getimagesize($mediaPath);
 
-        $metadata = array_combine(
+        $metadata = \array_combine(
             array('width', 'height'),
             array($data[0], $data[1])
         );

@@ -23,12 +23,11 @@ class Configuration implements ConfigurationInterface
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
-        $this->addBlobStorage($rootNode);
+        \Sfynx\CoreBundle\DependencyInjection\Configuration::addMappingConfig($rootNode);
         $this->addStorageProviders($rootNode);
         $this->addExcludeSigningPattern($rootNode);
         $this->addMediaConfig($rootNode);
         $this->addExtensionConfig($rootNode);
-        $this->addMapping($rootNode);
 
         $rootNode
             ->children()
@@ -44,29 +43,6 @@ class Configuration implements ConfigurationInterface
         // more information on that topic.
 
         return $treeBuilder;
-    }
-
-    /**
-     * BlobStorage config
-     *
-     * @param $rootNode \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition
-     *
-     * @return void
-     * @access protected
-     *
-     * @author Etienne de Longeaux <etienne.delongeaux@gmail.com>
-     */
-    protected function addBlobStorage(ArrayNodeDefinition $rootNode)
-    {
-        $rootNode
-        ->children()
-            ->arrayNode('blob_storage')
-            ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('connection_string')->defaultValue('')->end()
-                ->end()
-            ->end()
-        ->end();
     }
 
     /**
@@ -184,33 +160,6 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->arrayNode('image')->prototype('scalar')->end()->defaultValue(['jpeg', 'jpg', 'png', 'gif'])->end()
                     ->arrayNode('document')->prototype('scalar')->end()->defaultValue(['json', 'xml', 'csv', 'pdf', 'doc', 'docx', 'rtf', 'xls', 'xlsx', 'xlsm', 'odt', 'txt'])->end()
-                ->end()
-            ->end()
-        ->end();
-    }
-
-    /**
-     * Mapping config
-     *
-     * @param $rootNode \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition
-     *
-     * @return void
-     * @access protected
-     *
-     * @author Etienne de Longeaux <etienne.delongeaux@gmail.com>
-     */
-    protected function addMapping(ArrayNodeDefinition $rootNode)
-    {
-        $rootNode
-        ->children()
-            ->arrayNode('mapping')
-            ->addDefaultsIfNotSet()
-                ->children()
-                    ->scalarNode('provider')->isRequired()->defaultValue('orm')->end()
-                    ->scalarNode('media_class')->defaultValue('Sfynx\ApiMediaBundle\Layers\Domain\Entity\Media')->end()
-                    ->scalarNode('media_entitymanager_command')->defaultValue('doctrine.orm.entity_manager')->end()
-                    ->scalarNode('media_entitymanager_query')->defaultValue('doctrine.orm.entity_manager')->end()
-                    ->scalarNode('media_entitymanager')->defaultValue('doctrine.orm.entity_manager')->end()
                 ->end()
             ->end()
         ->end();

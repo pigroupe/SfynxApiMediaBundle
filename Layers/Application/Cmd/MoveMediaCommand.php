@@ -13,6 +13,9 @@ use Symfony\Component\Console\Helper\Table;
 
 class MoveMediaCommand extends ContainerAwareCommand
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -32,7 +35,7 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $timeStart = microtime(true);
+        $timeStart = \microtime(true);
         $manager = $this->getContainer()->get('sfynx.apimedia.manager.media.entity');
         $newProviderServiceName = $input->getOption('provider');
         $newMediaProvider = $manager
@@ -121,7 +124,7 @@ EOT
         $table->setStyle('borderless');
         $table->render();
 
-        $timeEnd = microtime(true);
+        $timeEnd = \microtime(true);
         $time = $timeEnd - $timeStart;
 
         $output->writeln('');

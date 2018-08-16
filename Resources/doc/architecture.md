@@ -1,0 +1,1 @@
+![issues-menu](images/class_diagram.png)

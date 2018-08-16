@@ -13,6 +13,9 @@ use Symfony\Component\Console\Helper\Table;
 
 class CleanNoFileMediaCommand extends ContainerAwareCommand
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -40,14 +43,14 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $timeStart = microtime(true);
+        $timeStart = \microtime(true);
         $output->writeln(sprintf('<comment>Start Media Cleaner</comment>'));
 
         $mediaManager = $this->getContainer()->get('sfynx.apimedia.manager.media.entity');
 
         $medias = $mediaManager->findBy(
-            array(),
-            array(),
+            [],
+            [],
             $input->getOption('limit'),
             $input->getOption('offset')
         );
@@ -109,7 +112,7 @@ EOT
         $table->setStyle('borderless');
         $table->render();
 
-        $timeEnd = microtime(true);
+        $timeEnd = \microtime(true);
         $time = $timeEnd - $timeStart;
 
         $output->writeln('');

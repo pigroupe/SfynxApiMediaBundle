@@ -42,20 +42,17 @@ abstract class AbstractStuffMediaTransformer implements MediaTransformerInterfac
      */
     public function transform(Filesystem $storageProvider, Media $media, array $options = array())
     {
-        .
-        .
-        .
+        ...
+
         $responseMedia = $this
             ->process($storageProvider, $media, $options)
-        .
-        .
-        .
+
+        ...
 
         return $responseMedia;
     }
-    .
-    .
-    .
+
+    ...
 }
 ```
 
@@ -98,7 +95,7 @@ define available formats :
      */
     protected function getAvailableFormats()
     {
-        return array('stu', 'stf', 'stuff');
+        return ['stu', 'stf', 'stuff'];
     }
 ```
 
@@ -130,9 +127,8 @@ Implements the transform method or the abstract inherited part of it :
      */
     public function process(Filesystem $storageProvider, Media $media, array $options = array())
     {
-    	.
-    	.
-    	.
+        ...
+
         $responseMedia
             ->setContent($myTransformedStuffContent)
             ->setContentType($myStuffMimeType)
@@ -147,12 +143,13 @@ Implements the transform method or the abstract inherited part of it :
 Then you can use your transformation as simple service
 
 ```php
-	$media = $this->get('sfynx.apimedia.manager.media.entity')->retrieveMedia($reference);
+    $media = $this->get('sfynx.apimedia.manager.media.entity')->retrieveMedia($reference);
+
     $responseMedia = $this->get('sfynx.apimedia.manager.media.entity')->transform(
         $media,
         array_merge(
             $request->query->all(),
-            array('format' => $request->getRequestFormat())
+            ['format' => $request->getRequestFormat()]
         )
     );
 ```

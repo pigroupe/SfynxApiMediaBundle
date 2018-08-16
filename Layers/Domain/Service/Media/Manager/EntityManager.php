@@ -240,7 +240,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
      */
     public function __call($method, $args)
     {
-        return call_user_func_array(array($this->getQueryRepository(), $method), $args);
+        return \call_user_func_array([$this->getCommandRepository(), $method]), $args);
     }
 
     /**
@@ -406,7 +406,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         $resolver = new OptionsResolver();
         $this->setupParameters($resolver);
 
-        $resolvedParameters = $resolver->resolve(array_merge(
+        $resolvedParameters = $resolver->resolve(\array_merge(
             $this->getConfiguration(),
             $parameters
         ));
@@ -471,7 +471,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
             return false;
         }
 
-        $workingFileName = uniqid('tmp_media_');
+        $workingFileName = \uniqid('tmp_media_');
         $file = $media->getUploadedFile()->move(
             $this->getConfiguration("working_directory"),
             $workingFileName
@@ -491,7 +491,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         $storageProvider->delete($storageIdentifier);
         $storageProvider->write($storageIdentifier, file_get_contents($file->getRealPath()));
         $this->clearMediaCache($media);
-        unlink($this->getConfiguration("working_directory").DIRECTORY_SEPARATOR.$workingFileName);
+        \unlink($this->getConfiguration("working_directory").DIRECTORY_SEPARATOR.$workingFileName);
 
         return true;
     }
@@ -542,7 +542,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         return $mediaTransformer->transform(
             $this->getFilesystemMap()->get($media->getProviderServiceName()),
             $media,
-            array_merge(
+            \array_merge(
                 $options,
                 [
                     'storage_key' => $this->buildStorageKey(
@@ -559,7 +559,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
      */
     public function getMediaPublicUri(Media $media): string
     {
-        return sprintf('%s/media/%s',
+        return \sprintf('%s/media/%s',
             $this->getConfiguration('api_public_endpoint'),
             $media->getReference()
         );
@@ -573,7 +573,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
         if (null === $referencePrefix) {
             return $reference;
         }
-        return sprintf('%s/%s', $referencePrefix, $reference);
+        return \sprintf('%s/%s', $referencePrefix, $reference);
     }
 
     /**
@@ -626,7 +626,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
             $nodes[] = $metadata['offer'];
         }
         if (!empty($nodes)) {
-            return implode('/', $nodes);
+            return \implode('/', $nodes);
         }
         if (!empty($source)) {
             return $source;

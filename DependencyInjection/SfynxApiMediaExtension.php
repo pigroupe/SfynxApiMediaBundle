@@ -35,29 +35,13 @@ class SfynxApiMediaExtension extends Extension
         $container->setParameter('sfynx_api_media.cache_storage_provider', $config['cache_storage_provider']);
 
         /*
-         * Blob Storage config parameter
-         */
-
-        $container->setParameter('sfynx.apimedia.blob_storage.connection_string', $config['blob_storage']['connection_string']);
-
-        /*
          * Mapping config parameter
          */
-        if (isset($config['mapping']['provider'])) {
-            $container->setParameter('sfynx.apimedia.mapping.provider', $config['mapping']['provider']);
-        }
-
-        if (isset($config['mapping']['media_class'])) {
-            $container->setParameter('sfynx.apimedia.media_class', $config['mapping']['media_class']);
-        }
-        if (isset($config['mapping']['media_entitymanager_command'])) {
-            $container->setParameter('sfynx.apimedia.media.entitymanager.command', $config['mapping']['media_entitymanager_command']);
-        }
-        if (isset($config['mapping']['media_entitymanager_query'])) {
-            $container->setParameter('sfynx.apimedia.media.entitymanager.query', $config['mapping']['media_entitymanager_query']);
-        }
-        if (isset($config['mapping']['media_entitymanager'])) {
-            $container->setParameter('sfynx.apimedia.media.entitymanager', $config['mapping']['media_entitymanager']);
+        if (isset($config['mapping']['entities'])) {
+            $container->setParameter("sfynx.apimedia.mapping.entities", $config['mapping']['entities']);
+            foreach ($config['mapping']['entities'] as $entity => $param) {
+                $container->setParameter("sfynx.apimedia.mapping.{$entity}.class", $param['class']);
+            }
         }
 
         /**
