@@ -240,7 +240,7 @@ class EntityManager extends AbstractManager implements MediaManagerInterface, Ma
      */
     public function __call($method, $args)
     {
-        return \call_user_func_array([$this->getCommandRepository(), $method]), $args);
+        return \call_user_func_array([$this->getCommandRepository(), $method], $args);
     }
 
     /**
